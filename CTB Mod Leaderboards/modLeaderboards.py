@@ -31,23 +31,37 @@ def printFarmMaps(farmMaps, IDAndModToPPAndScore, IDToBeatmap, IDToBeatmapSet, n
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../../../style.css">
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../../../Mottie-tablesorter/js/jquery.tablesorter.js"></script>
+    <script>
+    $(function(){
+        $('table').tablesorter({
+            usNumberFormat : false,
+            sortReset      : true,
+            sortRestart    : true
+        });
+    });
+    </script>
     <title>"""+name+""" Farm Maps</title>
   </head>
   <body>
     <div class="content">
 <p><a href="../"""+name+""".html">Return to leaderboard</a></p>
 <br>
-<p><b>"""+name+""" Farm Maps</b></p>    
+<p><b>"""+name+""" Farm Maps (Click on PP or Farm Score to sort)</b></p>    
 <div class="bp-wrapper">
   <table class="bp">
     <thead>
       <tr>
-        <th class="text-left">#</th>
-        <th>Map name</th>
-        <th>Mods</th>
-        <th>PP</th>
-        <th>Farm Score</th>
+        <th data-lockedorder="asc" class="text-left">#</th>
+        <th data-sorter="false">Map name</th>
+        <th data-sorter="false">Mods</th>
+        <th data-lockedorder="desc">PP</th>
+        <th data-lockedorder="desc">Farm Score</th>
       </tr>
     </thead>
     <tbody>
@@ -97,7 +111,7 @@ def printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, user=0, count
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../../../style.css">
     <title>""" + username +"'s " + name + """ plays</title>
   </head>
   <body>
@@ -196,7 +210,7 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="../../style.css">
 <script
   src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
@@ -208,7 +222,7 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
     <div class="content">
 <p><a href="index.html">Return to main page</a></p>
 <br>
-<p>Osu!catch pp from only """+name+""" plays.</p>
+<p>Osu!catch pp from """+name+""" plays.</p>
 <p>Data taken from top 10,000 players.</p>
 <p>Doesn't include bonus pp.</p>
 """)
@@ -359,6 +373,7 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
                     if y.beatmapID in rainSet:
                         userRainSet.add(y.beatmapID)
         userScores.append([x, len(userAllSet), len(userRainSet)])
+    userScores.sort(key=lambda item: item[2], reverse=True)
     userScores.sort(key=lambda item: item[1], reverse=True)
     filteredCountrySet = set()
     for x in userScores[0:count]:
@@ -371,11 +386,21 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../../style.css">
     <script
       src="https://code.jquery.com/jquery-3.6.0.min.js"
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
       crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../../Mottie-tablesorter/js/jquery.tablesorter.js"></script>
+    <script>
+    $(function(){
+        $('table').tablesorter({
+            usNumberFormat : false,
+            sortReset      : true,
+            sortRestart    : true
+        });
+    });
+    </script>
         <title>
     Ranked Specific FCs ranking</title>
       </head>
@@ -388,7 +413,7 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
     <p>HT/EZ FCs do not count (even if EZ makes the map harder).</p>
     <p>Overwritten plays (a NM FC & a HR choke) do count.</p>
     <p>Lists of missing FCs are not currently provided, as most users have several thousand.</p>
-    <p>In addition to total FCs, there is also a leaderboard that only tracks "difficult" plays.</p>
+    <p>In addition to total FCs, there is also a leaderboard that only tracks "difficult" plays. Click the top of the table to sort</p>
     <p>This allows users to compete without playing 3000 Cups/Salads/Platters.</p>
     <p>I arbitrarily chose 3.5* as the cutoff.</p>
     <p> It's approximately the border between Platter & Rain, and includes <a href="http://osu.ppy.sh/b/283299">several</a> <a href="http://osu.ppy.sh/b/369758">maps</a> <a href="https://osu.ppy.sh/b/2905286">that I</a> <a href="http://osu.ppy.sh/b/177970">found</a> <a href="https://osu.ppy.sh/b/2385749">difficult</a>.</p>
@@ -412,13 +437,13 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
       <input id="reset" type="button" value="Clear search result">
     </div>
     <div id="ranking-wrapper">
-      <table>
+      <table class="tablesorter">
         <thead>
           <tr>
-            <th class="text-left">#</th>
-            <th id="user_name_head">Name</th>
-            <th>Total FCs\n(out of """+str(len(allSet))+""")</th>
-            <th>Rain+ FCs\n(out of """+str(len(rainSet))+""")</th>
+            <th data-lockedorder="asc" class="text-left">#</th>
+            <th data-sorter="false" id="user_name_head">Name</th>
+            <th data-lockedorder="desc">Total FCs<br>(out of """+str(len(allSet))+""")</th>
+            <th data-lockedorder="desc">Rain+ FCs<br>(out of """+str(len(rainSet))+""")</th>
           </tr>
         </thead>
         <tbody>
@@ -432,7 +457,8 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
             </td>
             <td>""" + str(x[1]) + " ("+"{:.2f}".format(100*x[1]/len(allSet))+"""%)</td>
             <td>""" + str(x[2]) + " ("+"{:.2f}".format(100*x[2]/len(rainSet))+"""%)</td>
-          </tr>""")
+          </tr>
+""")
         rank += 1
     file.write("""    </tbody>
       </table>

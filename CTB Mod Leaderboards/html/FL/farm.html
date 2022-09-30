@@ -4,23 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
-<link rel="stylesheet" href="../style.css">
+<link rel="stylesheet" href="../../../style.css">
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../../../Mottie-tablesorter/js/jquery.tablesorter.js"></script>
+    <script>
+    $(function(){
+        $('table').tablesorter({
+            usNumberFormat : false,
+            sortReset      : true,
+            sortRestart    : true
+        });
+    });
+    </script>
     <title>FL Farm Maps</title>
   </head>
   <body>
     <div class="content">
 <p><a href="../FL.html">Return to leaderboard</a></p>
 <br>
-<p><b>FL Farm Maps</b></p>    
+<p><b>FL Farm Maps (Click on PP or Farm Score to sort)</b></p>    
 <div class="bp-wrapper">
   <table class="bp">
     <thead>
       <tr>
-        <th class="text-left">#</th>
-        <th>Map name</th>
-        <th>Mods</th>
-        <th>PP</th>
-        <th>Farm Score</th>
+        <th data-lockedorder="asc" class="text-left">#</th>
+        <th data-sorter="false">Map name</th>
+        <th data-sorter="false">Mods</th>
+        <th data-lockedorder="desc">PP</th>
+        <th data-lockedorder="desc">Farm Score</th>
       </tr>
     </thead>
     <tbody>
