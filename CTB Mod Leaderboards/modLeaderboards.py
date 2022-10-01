@@ -23,7 +23,7 @@ def ppCalculate(playList, count=100):
     return output
 
 
-def printFarmMaps(farmMaps, IDAndModToPPAndScore, IDToBeatmap, IDToBeatmapSet, name, count=2000):
+def printFarmMaps(farmMaps, IDAndModToPPAndScore, IDToBeatmap, IDToBeatmapSet, name, count=1000):
     file = open("html/"+name+"/farm.html", "w")
     file.write("""<!DOCTYPE html>
 <html lang="en">
@@ -231,9 +231,9 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
         """)
     file.write("""<p>If player has multiple scores on the same map, only the highest pp play is used for calculation.</p>
 <p>Click someone's name to see their top ranks.</p>
-<p>Using 1st September 2022 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a></p>
+<p>Using 1st October 2022 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
 <p><a href=\""""+name+"""/all.html">Top 200 plays overall</a></p>
-<p><a href=\""""+name+"""/farm.html">Top 2000 farm maps</a></p>
+<p><a href=\""""+name+"""/farm.html">Top 1000 farm maps</a></p>
 <div class="search_field">
   <input id="user_search_text" type="text" placeholder="Search by username...">
   <input id="user_search_button" type="button" value="search">
@@ -417,7 +417,7 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
     <p>This allows users to compete without playing 3000 Cups/Salads/Platters.</p>
     <p>I arbitrarily chose 3.5* as the cutoff.</p>
     <p> It's approximately the border between Platter & Rain, and includes <a href="http://osu.ppy.sh/b/283299">several</a> <a href="http://osu.ppy.sh/b/369758">maps</a> <a href="https://osu.ppy.sh/b/2905286">that I</a> <a href="http://osu.ppy.sh/b/177970">found</a> <a href="https://osu.ppy.sh/b/2385749">difficult</a>.</p>
-    <p>Using 1st September 2022 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a></p>
+    <p>Using 1st October 2022 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
       <input id="user_search_button" type="button" value="search">
