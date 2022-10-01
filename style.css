@@ -1,0 +1,58 @@
+body {
+  margin: 8px;
+}
+
+p {
+  margin: 6px 0;
+}
+
+th,
+td {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid #ccc;
+}
+
+table.bp tr:nth-child(odd) {
+  background: #eee;
+}
+/*
+.ranking-wrapper {
+  width: 50%;
+} */
+
+.text-left {
+  text-align: left;
+}
+
+.text-center {
+  text-align: center;
+}
+
+#user_search_text {
+  border: 1px solid #ddd;
+  padding: 0.25rem;
+}
+
+input[type="button"] {
+  border: solid 1px #333;
+  padding: 0.25rem;
+  background-color: rgb(240, 240, 240);
+}
+
+#country_ranking {
+  border: 1px grey solid;
+  padding: 0.25rem;
+  -webkit-appearance: auto;
+}
+
+.search_field {
+  margin: 6px 0;
+}
+
+.recent {
+  background: deepskyblue!important;
+}
+
+.hide {
+  display: none;
+}
