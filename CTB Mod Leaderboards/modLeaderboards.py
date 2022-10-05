@@ -175,13 +175,30 @@ def printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, user=0, count
 </html>""")
 
 
-def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDToBeatmapSet, includeMods=0, excludeMods=0, count=2000):
+def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDToBeatmapSet, includeMods=0, excludeMods=0, count=2000, banSet={}):
     IDToPP = []
     allPlays = []
+    hasBanList = False
+    if len(banSet) != 0:
+        hasBanList = True
+        IDToBannedPP = {}
     for x in userIDToPlays:
         filteredPlays = playFilter(userIDToPlays[x], includeMods=includeMods, excludeMods=excludeMods)
         allPlays.extend(filteredPlays[0:100])
         IDToPP.append((x, ppCalculate(filteredPlays)))
+        if hasBanList:
+            banFilteredPlays = filteredPlays
+            for y in banFilteredPlays[0:100+len(banSet)]:
+                if y.beatmapID in banSet:
+                    filteredPlays.remove(y)
+            IDToBannedPP[x] = ppCalculate(banFilteredPlays)
+    if hasBanList:
+        banSorted = sorted(IDToBannedPP, key=lambda item: IDToBannedPP[item], reverse=True)
+        banRanked = {}
+        rank = 1
+        for x in banSorted:
+            banRanked[x] = rank
+            rank += 1
     allPlays.sort(key=lambda item: item.pp, reverse=True)
     printPlays(allPlays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, count=200, multiuser=True)
     IDToPP.sort(key=lambda item: item[1], reverse=True)
@@ -203,6 +220,11 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
     farmMaps = sorted(IDAndModToPPAndScore, key=lambda item: IDAndModToPPAndScore[item][1], reverse=True)
     printFarmMaps(farmMaps, IDAndModToPPAndScore, IDToBeatmap, IDToBeatmapSet, name)
     filteredCountryList = sorted(filteredCountrySet, key=lambda item: countryCodes[item])
+    banListString = ""
+    if hasBanList:
+        banListString = "<p>Banlist</p>"
+        for x in banSet:
+            banListString += """\n<p><a href="https://osu.ppy.sh/b/"""+str(x)+"""?m=2" target="_blank">"""+IDToBeatmapSet[IDToBeatmap[x].beatmapSetID].title+" ["+IDToBeatmap[x].difficultyName+"""]</a></p>"""
     file = open("html/"+name+".html", "w")
     file.write("""<!DOCTYPE html>
 <html lang="en">
@@ -215,8 +237,17 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
   src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
-    <title>
-"""+name+""" pp ranking</title>
+    <script type="text/javascript" src="../../Mottie-tablesorter/js/jquery.tablesorter.js"></script>
+    <script>
+    $(function(){
+        $('table').tablesorter({
+            usNumberFormat : false,
+            sortReset      : true,
+            sortRestart    : true
+        });
+    });
+    </script>
+    <title>"""+name+""" pp ranking</title>
   </head>
   <body>
     <div class="content">
@@ -231,7 +262,10 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
         """)
     file.write("""<p>If player has multiple scores on the same map, only the highest pp play is used for calculation.</p>
 <p>Click someone's name to see their top ranks.</p>
-<p>Using 1st October 2022 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+""" +
+("""<p>There is a separate leaderboard that bans the """ + str(len(banSet)) + """ most overweighted maps. Click the top of the table to sort.</p>
+""" if hasBanList else "")
++ """<p>Using 1st October 2022 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
 <p><a href=\""""+name+"""/all.html">Top 200 plays overall</a></p>
 <p><a href=\""""+name+"""/farm.html">Top 1000 farm maps</a></p>
 <div class="search_field">
@@ -253,13 +287,15 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
   <input id="reset" type="button" value="Clear search result">
 </div>
 <div id="ranking-wrapper">
-  <table>
+  <table table class="tablesorter">
     <thead>
       <tr>
-        <th class="text-left">#</th>
-        <th id="user_name_head">Name</th>
-        <th>PP</th>
-      </tr>
+        <th data-lockedorder="asc" class="text-left">#</th>
+        <th data-sorter="false" id="user_name_head">Name</th>
+        <th data-lockedorder="desc">PP</th>""" + ("""
+        <th data-lockedorder="desc">Filtered<br>PP</th>
+        <th data-lockedorder="asc" class="text-left">#</th>""" if hasBanList else "") +
+"""      </tr>
     </thead>
     <tbody>
 """)
@@ -270,13 +306,15 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
         <td class="user_name">
           <a href=\""""+name+"/"+str(x[0])+""".html">"""+IDToUser[x[0]].name+"""</a>
         </td>
-        <td>"""+"{:.2f}".format(x[1])+"""</td>
+        <td>"""+"{:.2f}".format(x[1])+(("""</td>
+        <td>"""+"{:.2f}".format(IDToBannedPP[x[0]])+"""</td>
+        <td>"""+str(banRanked[x[0]])) if hasBanList else "")+"""</td>
       </tr>""")
         rank += 1
     file.write("""    </tbody>
   </table>
 </div>
-  </div>
+  </div>"""+banListString+"""
   </body>
 <script>
   "use strict";
@@ -373,7 +411,13 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
                     if y.beatmapID in rainSet:
                         userRainSet.add(y.beatmapID)
         userScores.append([x, len(userAllSet), len(userRainSet)])
+    userScores.sort(key=lambda item: item[1], reverse=True)
     userScores.sort(key=lambda item: item[2], reverse=True)
+    IDtoRainRank = {}
+    rank = 1
+    for x in userScores:
+        IDtoRainRank[x[0]] = rank
+        rank += 1
     userScores.sort(key=lambda item: item[1], reverse=True)
     filteredCountrySet = set()
     for x in userScores[0:count]:
@@ -444,6 +488,7 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
             <th data-sorter="false" id="user_name_head">Name</th>
             <th data-lockedorder="desc">Total FCs<br>(out of """+str(len(allSet))+""")</th>
             <th data-lockedorder="desc">Rain+ FCs<br>(out of """+str(len(rainSet))+""")</th>
+            <th data-lockedorder="asc" class="text-left">#</th>
           </tr>
         </thead>
         <tbody>
@@ -457,6 +502,7 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
             </td>
             <td>""" + str(x[1]) + " ("+"{:.2f}".format(100*x[1]/len(allSet))+"""%)</td>
             <td>""" + str(x[2]) + " ("+"{:.2f}".format(100*x[2]/len(rainSet))+"""%)</td>
+            <td>""" + str(IDtoRainRank[x[0]])+"""</td>
           </tr>
 """)
         rank += 1
@@ -524,7 +570,7 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
     </html>""")
 
 
-# file = open("userIDToRankedPlays.pkl", "rb")
+# file = open("userIDToLovedPlays.pkl", "rb")
 # userIDToPlays = pickle.load(file)
 # file.close()
 # file = open("IDToUser.pkl", "rb")

@@ -1,5 +1,7 @@
 import pickle
 
+import tools
+
 usercode = input("User number or name: ")
 usingNumber = True
 try:
@@ -33,10 +35,10 @@ for x in IDToBeatmap:
     if IDToBeatmap[x].mode == 2:
         if IDToBeatmap[x].status <= 2:
             if IDToBeatmap[x].ID not in FCset:
-                todo.append(IDToBeatmap[x])
-todo.sort(key=lambda item: item.difficulty[0])
+                todo.append((IDToBeatmap[x], tools.catchPP(IDToBeatmap[x].difficulty[0], IDToBeatmap[x].maxCombo, IDToBeatmap[x].maxCombo, 0, IDToBeatmap[x].AR, 0, 1)))
+todo.sort(key=lambda item: item[1])
 file = open("IDToBeatmapSet.pkl", "rb")
 IDToBeatmapSet = pickle.load(file)
 file.close()
 for x in todo:
-    print(IDToBeatmapSet[x.beatmapSetID].artist + " - " + IDToBeatmapSet[x.beatmapSetID].title + " [" + x.difficultyName + "]")
+    print("{:.2f}".format(x[0].difficulty[0]) + "* " + "{:.2f}".format(x[1]) + " pp: " + IDToBeatmapSet[x[0].beatmapSetID].artist + " - " + IDToBeatmapSet[x[0].beatmapSetID].title + " [" + x[0].difficultyName + "]")

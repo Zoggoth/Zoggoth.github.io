@@ -9,8 +9,17 @@
   src="https://code.jquery.com/jquery-3.6.0.min.js"
   integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
   crossorigin="anonymous"></script>
-    <title>
-FL pp ranking</title>
+    <script type="text/javascript" src="../../Mottie-tablesorter/js/jquery.tablesorter.js"></script>
+    <script>
+    $(function(){
+        $('table').tablesorter({
+            usNumberFormat : false,
+            sortReset      : true,
+            sortRestart    : true
+        });
+    });
+    </script>
+    <title>FL pp ranking</title>
   </head>
   <body>
     <div class="content">
@@ -131,13 +140,12 @@ FL pp ranking</title>
   <input id="reset" type="button" value="Clear search result">
 </div>
 <div id="ranking-wrapper">
-  <table>
+  <table table class="tablesorter">
     <thead>
       <tr>
-        <th class="text-left">#</th>
-        <th id="user_name_head">Name</th>
-        <th>PP</th>
-      </tr>
+        <th data-lockedorder="asc" class="text-left">#</th>
+        <th data-sorter="false" id="user_name_head">Name</th>
+        <th data-lockedorder="desc">PP</th>      </tr>
     </thead>
     <tbody>
       <tr class="South_Korea">

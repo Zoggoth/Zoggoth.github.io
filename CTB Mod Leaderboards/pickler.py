@@ -18,6 +18,7 @@ for x in capture:
     beatmap.status = int(x[5])
     beatmap.difficulty = {}
     IDToBeatmap[beatmap.ID] = beatmap
+IDToBeatmap[2536330].difficulty = {0: 12.60, 2: 10.54, 16: 15.02, 64: 15.15, 66: 12.63, 80: 18.08, 256: 11.43, 258: 9.58, 272: 13.58}
 file = open("osu_beatmap_difficulty.sql", "r")
 text = file.read()
 file.close()
@@ -84,6 +85,7 @@ for x in capture:
         IDToBeatmap[play.beatmapID].accuracyTotal = IDToBeatmap[play.beatmapID].maxCombo + int(x[6]) + int(x[10])
     except Exception as e:
         print(e)
+        print(x)
         continue
     play.modCode = int(x[11])
     if x[12] != "NULL":
@@ -99,6 +101,7 @@ for x in capture:
                 SR = IDToBeatmap[play.beatmapID].difficulty[tools.modCodeToDifficultyCode(play.modCode)]
             except:
                 SR = 0
+                print("Missing SR: " + str(play.beatmapID))
             maxCombo = IDToBeatmap[play.beatmapID].maxCombo
             AR = tools.modifiedAR(IDToBeatmap[play.beatmapID].AR, play.modCode)
             Acc = 1-(play.misses+play.drpmiss)/IDToBeatmap[play.beatmapID].accuracyTotal
@@ -135,6 +138,6 @@ modLeaderboards.modLeaderboard("DT", includeMods=64, userIDToPlays=userIDToRanke
 modLeaderboards.modLeaderboard("HT", includeMods=256, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
 modLeaderboards.modLeaderboard("FL", includeMods=1024, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
 modLeaderboards.modLeaderboard("NM", excludeMods=1370, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
-modLeaderboards.modLeaderboard("Loved", userIDToPlays=userIDToLovedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
+modLeaderboards.modLeaderboard("Loved", userIDToPlays=userIDToLovedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet, banSet={1529757, 2572147, 1257904, 2571858, 1267365, 1165130})
 modLeaderboards.YMDvsTheWorld(4158549, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
 modLeaderboards.specificFCsLeaderboard(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
