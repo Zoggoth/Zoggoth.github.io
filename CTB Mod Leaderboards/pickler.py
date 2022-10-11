@@ -6,35 +6,35 @@ import modLeaderboards
 file = open("osu_beatmaps.sql", "r", encoding="utf-8")
 text = file.read()
 file.close()
-capture = re.findall(r"\((\d+),(\d+),\d+,'[^']*?(?:\\'[^']*?)*','[0-f]*','([^']*?(?:\\'[^']*?)*)',(?:\d+(?:\.\d+)?,){9}(\d+(?:\.\d+)?),(\d),(\d)", text)
+capture = re.finditer(r"\((?P<ID>\d+),(?P<SetID>\d+),\d+,'[^']*?(?:\\'[^']*?)*','[0-f]*','(?P<DiffName>[^']*?(?:\\'[^']*?)*)',(?:\d+(?:\.\d+)?,){9}(?P<AR>\d+(?:\.\d+)?),(?P<Mode>\d),(?P<Status>\d)", text)
 IDToBeatmap = {}
 for x in capture:
     beatmap = tools.beatmap()
-    beatmap.ID = int(x[0])
-    beatmap.beatmapSetID = int(x[1])
-    beatmap.difficultyName = x[2].replace(r"\'", "'")
-    beatmap.AR = float(x[3])
-    beatmap.mode = int(x[4])
-    beatmap.status = int(x[5])
+    beatmap.ID = int(x["ID"])
+    beatmap.beatmapSetID = int(x["SetID"])
+    beatmap.difficultyName = x["DiffName"].replace(r"\'", "'")
+    beatmap.AR = float(x["AR"])
+    beatmap.mode = int(x["Mode"])
+    beatmap.status = int(x["Status"])
     beatmap.difficulty = {}
     IDToBeatmap[beatmap.ID] = beatmap
 IDToBeatmap[2536330].difficulty = {0: 12.60, 2: 10.54, 16: 15.02, 64: 15.15, 66: 12.63, 80: 18.08, 256: 11.43, 258: 9.58, 272: 13.58}
 file = open("osu_beatmap_difficulty.sql", "r")
 text = file.read()
 file.close()
-capture = re.findall(r"\((\d+),2,(\d+),(\d+(?:\.\d+)?)", text)
+capture = re.finditer(r"\((?P<ID>\d+),2,(?P<ModCode>\d+),(?P<SR>\d+(?:\.\d+)?)", text)
 for x in capture:
-    IDToBeatmap[int(x[0])].difficulty[int(x[1])] = float(x[2])
+    IDToBeatmap[int(x["ID"])].difficulty[int(x["ModCode"])] = float(x["SR"])
 file = open("osu_beatmapsets.sql", "r", encoding="utf-8", errors="replace")
 text = file.read()
 file.close()
-capture = re.findall(r"\((\d+),\d+,\d+,'([^']*?(?:\\'[^']*?)*)',(?:NULL|'[^']*?(?:\\'[^']*?)*'),'([^']*?(?:\\'[^']*?)*)',", text)
+capture = re.finditer(r"\((?P<ID>\d+),\d+,\d+,'(?P<Artist>[^']*?(?:\\'[^']*?)*)',(?:NULL|'[^']*?(?:\\'[^']*?)*'),'(?P<Title>[^']*?(?:\\'[^']*?)*)',", text)
 IDToBeatmapSet = {}
 for x in capture:
     beatmapSet = tools.beatmapSet()
-    beatmapSet.ID = int(x[0])
-    beatmapSet.artist = x[1].replace(r"\'", "'")
-    beatmapSet.title = x[2].replace(r"\'", "'")
+    beatmapSet.ID = int(x["ID"])
+    beatmapSet.artist = x["Artist"].replace(r"\'", "'")
+    beatmapSet.title = x["Title"].replace(r"\'", "'")
     IDToBeatmapSet[beatmapSet.ID] = beatmapSet
 file = open("Country Codes.txt", "r")
 text = file.read().split("\n")
@@ -45,51 +45,51 @@ for x in range(round(len(text)/2)):
 file = open("osu_user_stats_fruits.sql", "r")
 text = file.read()
 file.close()
-capture = re.findall(r"\((\d+),\d+,\d+,\d+,\d+,\d+,\d+,\d+(?:\.\d+)?,\d+,\d+,\d+,\d+,\d+,\d+,\d+,\d+,\d+,\d+(?:\.\d+)?,\d+,\d+,\d+,\d+,'(\w\w)',(\d+(?:\.\d+)?),(\d+)", text)
+capture = re.finditer(r"\((?P<ID>\d+),\d+,\d+,\d+,\d+,\d+,\d+,\d+(?:\.\d+)?,\d+,\d+,\d+,\d+,\d+,\d+,\d+,\d+,\d+,\d+(?:\.\d+)?,\d+,\d+,\d+,\d+,'(?P<Country>\w\w)',(?P<PP>\d+(?:\.\d+)?),(?P<Rank>\d+)", text)
 IDToUser = {}
 for x in capture:
     user = tools.user()
-    user.ID = int(x[0])
-    user.country = x[1]
+    user.ID = int(x["ID"])
+    user.country = x["Country"]
     if user.country not in countryCodes:
         print("Country " + user.country + " missing")
         countryCodes[user.country] = user.country
-    user.pp = float(x[2])
-    user.ppRank = int(x[3])
+    user.pp = float(x["PP"])
+    user.ppRank = int(x["Rank"])
     IDToUser[user.ID] = user
 file = open("sample_users.sql", "r")
 text = file.read()
 file.close()
-capture = re.findall(r"\((\d+),'([^']*)'", text)
+capture = re.finditer(r"\((?P<ID>\d+),'(?P<Name>[^']*)'", text)
 for x in capture:
-    IDToUser[int(x[0])].name = x[1]
+    IDToUser[int(x["ID"])].name = x["Name"]
 file = open("osu_scores_fruits_high.sql", "r")
 text = file.read()
 file.close()
-capture = re.findall(r"\((\d+),(\d+),(\d+),(\d+),(\d+),'(\wH?)',(\d+),(\d+),(\d+),(\d+),\d+,(\d+),\d,(\d+),'[^']*',(\d+(?:\.\d+)?|NULL)", text)
+capture = re.finditer(r"\((?P<PlayID>\d+),(?P<BeatmapID>\d+),(?P<UserID>\d+),(?P<Score>\d+),(?P<Combo>\d+),'(?P<Rank>\wH?)',(?P<n50>\d+),(?P<n100>\d+),(?P<n300>\d+),(?P<Miss>\d+),\d+,(?P<DrpMiss>\d+),\d,(?P<ModCode>\d+),'[^']*',(?P<PP>\d+(?:\.\d+)?|NULL)", text)
 userIDToRankedPlays = {}
 userIDToLovedPlays = {}
 for x in capture:
     safe = True
     play = tools.play()
-    play.ID = int(x[0])
-    play.beatmapID = int(x[1])
-    play.userID = int(x[2])
-    play.score = int(x[3])
-    play.combo = int(x[4])
-    play.rank = x[5]
-    play.misses = int(x[9])
-    play.drpmiss = int(x[10])
+    play.ID = int(x["PlayID"])
+    play.beatmapID = int(x["BeatmapID"])
+    play.userID = int(x["UserID"])
+    play.score = int(x["Score"])
+    play.combo = int(x["Combo"])
+    play.rank = x["Rank"]
+    play.misses = int(x["Miss"])
+    play.drpmiss = int(x["DrpMiss"])
     try:
-        IDToBeatmap[play.beatmapID].maxCombo = int(x[7]) + int(x[8]) + int(x[9])
-        IDToBeatmap[play.beatmapID].accuracyTotal = IDToBeatmap[play.beatmapID].maxCombo + int(x[6]) + int(x[10])
+        IDToBeatmap[play.beatmapID].maxCombo = int(x["n100"]) + int(x["n300"]) + int(x["Miss"])
+        IDToBeatmap[play.beatmapID].accuracyTotal = IDToBeatmap[play.beatmapID].maxCombo + int(x["n50"]) + int(x["DrpMiss"])
     except Exception as e:
         print(e)
-        print(x)
+        print(x[0])
         continue
-    play.modCode = int(x[11])
-    if x[12] != "NULL":
-        play.pp = float(x[12])
+    play.modCode = int(x["ModCode"])
+    if x["PP"] != "NULL":
+        play.pp = float(x["PP"])
         if play.userID not in userIDToRankedPlays:
             userIDToRankedPlays[play.userID] = []
         userIDToRankedPlays[play.userID].append(play)
