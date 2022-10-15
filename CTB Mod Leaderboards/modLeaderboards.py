@@ -571,7 +571,10 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
 
 
 # file = open("userIDToLovedPlays.pkl", "rb")
-# userIDToPlays = pickle.load(file)
+# userIDToLovedPlays = pickle.load(file)
+# file.close()
+# file = open("userIDToRankedPlays.pkl", "rb")
+# userIDToRankedPlays = pickle.load(file)
 # file.close()
 # file = open("IDToUser.pkl", "rb")
 # IDToUser = pickle.load(file)

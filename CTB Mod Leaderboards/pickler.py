@@ -1,4 +1,6 @@
 import re
+import time
+
 import tools
 import pickle
 import modLeaderboards
@@ -28,13 +30,14 @@ for x in capture:
 file = open("osu_beatmapsets.sql", "r", encoding="utf-8", errors="replace")
 text = file.read()
 file.close()
-capture = re.finditer(r"\((?P<ID>\d+),\d+,\d+,'(?P<Artist>[^']*?(?:\\'[^']*?)*)',(?:NULL|'[^']*?(?:\\'[^']*?)*'),'(?P<Title>[^']*?(?:\\'[^']*?)*)',", text)
+capture = re.finditer(r"\((?P<ID>\d+),\d+,\d+,'(?P<Artist>[^']*?(?:\\'[^']*?)*)',(?:NULL|'[^']*?(?:\\'[^']*?)*'),'(?P<Title>[^']*?(?:\\'[^']*?)*)',(?:NULL|'[^']*?(?:\\'[^']*?)*'),'[^']*?(?:\\'[^']*?)*','[^']*?(?:\\'[^']*?)*','[^']*?(?:\\'[^']*?)*',\d,\d,\d,\d+(?:\.\d+)?,\d+,\d+,(?:\d+|NULL),'(?P<Date>[^']+)", text)
 IDToBeatmapSet = {}
 for x in capture:
     beatmapSet = tools.beatmapSet()
     beatmapSet.ID = int(x["ID"])
     beatmapSet.artist = x["Artist"].replace(r"\'", "'")
     beatmapSet.title = x["Title"].replace(r"\'", "'")
+    beatmapSet.date = time.mktime(time.strptime(x["Date"], '%Y-%m-%d %H:%M:%S'))
     IDToBeatmapSet[beatmapSet.ID] = beatmapSet
 file = open("Country Codes.txt", "r")
 text = file.read().split("\n")
@@ -66,7 +69,7 @@ for x in capture:
 file = open("osu_scores_fruits_high.sql", "r")
 text = file.read()
 file.close()
-capture = re.finditer(r"\((?P<PlayID>\d+),(?P<BeatmapID>\d+),(?P<UserID>\d+),(?P<Score>\d+),(?P<Combo>\d+),'(?P<Rank>\wH?)',(?P<n50>\d+),(?P<n100>\d+),(?P<n300>\d+),(?P<Miss>\d+),\d+,(?P<DrpMiss>\d+),\d,(?P<ModCode>\d+),'[^']*',(?P<PP>\d+(?:\.\d+)?|NULL)", text)
+capture = re.finditer(r"\((?P<PlayID>\d+),(?P<BeatmapID>\d+),(?P<UserID>\d+),(?P<Score>\d+),(?P<Combo>\d+),'(?P<Rank>\wH?)',(?P<n50>\d+),(?P<n100>\d+),(?P<n300>\d+),(?P<Miss>\d+),\d+,(?P<DrpMiss>\d+),\d,(?P<ModCode>\d+),'(?P<Date>[^']*)',(?P<PP>\d+(?:\.\d+)?|NULL)", text)
 userIDToRankedPlays = {}
 userIDToLovedPlays = {}
 for x in capture:
@@ -88,6 +91,7 @@ for x in capture:
         print(x[0])
         continue
     play.modCode = int(x["ModCode"])
+    play.date = time.mktime(time.strptime(x["Date"], '%Y-%m-%d %H:%M:%S'))
     if x["PP"] != "NULL":
         play.pp = float(x["PP"])
         if play.userID not in userIDToRankedPlays:

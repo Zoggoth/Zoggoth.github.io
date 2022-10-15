@@ -1,10 +1,12 @@
 import math
+import datetime
 
 
 class beatmapSet:
     ID = 0
     artist = ""  # There's also a unicode one
     title = ""  # ""
+    date = datetime.datetime(1970, 1, 1)
 
     def debugPrint(self):
         print(str(self.ID) + " " + self.artist + " " + self.title)
@@ -51,6 +53,7 @@ class play:
     drpmiss = 0
     modCode = 0
     pp = 0
+    date = datetime.datetime(1970, 1, 1)
 
     def debugPrint(self):
         print(str(self.ID) + " " + str(self.beatmapID) + " " + str(self.userID) + " " + str(self.score) + " " + str(self.combo) + " " + self.rank + " " + str(self.misses) + " " + str(self.drpmiss) + " " + str(self.modCode) + " " + str(self.pp))
