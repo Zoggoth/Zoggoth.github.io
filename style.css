@@ -56,3 +56,31 @@ input[type="button"] {
 .hide {
   display: none;
 }
+
+#user_name_head, .user_name {
+  width: 10.5rem;
+}
+
+.rank_up {
+  color: limegreen;
+}
+
+.rank_down {
+  color: crimson;
+}
+
+.rank_no_change {
+  color: grey;
+}
+
+.rank_new {
+  color: orange;
+}
+
+.pp_50 {
+  color: mediumpurple;
+}
+
+.pp_100 {
+  color: deepskyblue;
+}

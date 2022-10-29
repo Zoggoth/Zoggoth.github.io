@@ -225,7 +225,11 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
         banListString = "<p>Banlist</p>"
         for x in banSet:
             banListString += """\n<p><a href="https://osu.ppy.sh/b/"""+str(x)+"""?m=2" target="_blank">"""+IDToBeatmapSet[IDToBeatmap[x].beatmapSetID].title+" ["+IDToBeatmap[x].difficultyName+"""]</a></p>"""
-    file = open("html/"+name+".html", "w")
+    IDtoStoredData = {}
+    file = open("last month/previous"+name+".pkl", "rb")
+    lastMonth = pickle.load(file)
+    file.close()
+    file = open("html/"+name+".html", "w", encoding="utf-8")
     file.write("""<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -302,14 +306,77 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
     rank = 1
     for x in IDToPP[:count]:
         file.write("""      <tr class=\""""+countryCodes[IDToUser[x[0]].country].replace(" ", "_")+"""">
-        <td>"""+str(rank)+"""</td>
+        <td>"""+str(rank))
+        if x[0] in lastMonth:
+            change = lastMonth[x[0]][0] - rank
+            if change == 0:
+                file.write(""" <span class="rank_no_change">(→)</span>""")
+            if change > 0:
+                file.write(""" <span class="rank_up">(+"""+str(change)+")</span>")
+            if change < 0:
+                file.write(""" <span class="rank_down">("""+str(change)+")</span>")
+        else:
+            file.write(""" <span class="rank_new">(New)</span>""")
+        file.write("""</td>
         <td class="user_name">
           <a href=\""""+name+"/"+str(x[0])+""".html">"""+IDToUser[x[0]].name+"""</a>
         </td>
-        <td>"""+"{:.2f}".format(x[1])+(("""</td>
-        <td>"""+"{:.2f}".format(IDToBannedPP[x[0]])+"""</td>
-        <td>"""+str(banRanked[x[0]])) if hasBanList else "")+"""</td>
+        <td>"""+"{:.2f}".format(x[1]))
+        if x[0] in lastMonth:
+            change = x[1] - lastMonth[x[0]][1]
+            if change == 0:
+                file.write(""" <span class="rank_no_change">(+0)</span>""")
+            if change < 0:
+                file.write(""" <span class="rank_down">("""+"{:.2f}".format(change)+")</span>")
+            if change > 0:
+                if change < 50:
+                    file.write(""" <span class="pp_50">(+"""+"{:.2f}".format(change)+")</span>")
+                else:
+                    if change < 100:
+                        file.write(""" <span class="pp_100">(+""" + "{:.2f}".format(change) + ")</span>")
+                    else:
+                        if change < 200:
+                            file.write(""" <span class="rank_new">(+""" + "{:.2f}".format(change) + ")</span>")
+                        else:
+                            file.write(""" <span class="rank_up">(+""" + "{:.2f}".format(change) + ")</span>")
+        if hasBanList:
+            file.write("""</td>
+        <td>"""+"{:.2f}".format(IDToBannedPP[x[0]]))
+            if x[0] in lastMonth:
+                change = IDToBannedPP[x[0]] - lastMonth[x[0]][3]
+                if change == 0:
+                    file.write(""" <span class="rank_no_change">(+0)</span>""")
+                if change < 0:
+                    file.write(""" <span class="rank_down">("""+"{:.2f}".format(change)+")</span>")
+                if change > 0:
+                    if change < 50:
+                        file.write(""" <span class="pp_50">(+"""+"{:.2f}".format(change)+")</span>")
+                    else:
+                        if change < 100:
+                            file.write(""" <span class="pp_100">(+""" + "{:.2f}".format(change) + ")</span>")
+                        else:
+                            if change < 200:
+                                file.write(""" <span class="rank_new">(+""" + "{:.2f}".format(change) + ")</span>")
+                            else:
+                                file.write(""" <span class="rank_up">(+""" + "{:.2f}".format(change) + ")</span>")
+            file.write("""</td>
+        <td>"""+str(banRanked[x[0]]))
+            if x[0] in lastMonth:
+                change = lastMonth[x[0]][2] - banRanked[x[0]]
+                if change == 0:
+                    file.write(""" <span class="rank_no_change">(→)</span>""")
+                if change > 0:
+                    file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+                if change < 0:
+                    file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+            else:
+                file.write(""" <span class="rank_new">(New)</span>""")
+        file.write("""</td>
       </tr>""")
+        if hasBanList:
+            IDtoStoredData[x[0]] = (rank, x[1], banRanked[x[0]], IDToBannedPP[x[0]])
+        else:
+            IDtoStoredData[x[0]] = (rank, x[1])
         rank += 1
     file.write("""    </tbody>
   </table>
@@ -373,6 +440,10 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
   });
 </script>
 </html>""")
+    file.close()
+    file = open("this month/previous"+name+".pkl", "wb")
+    pickle.dump(IDtoStoredData, file)
+    file.close()
 
 
 def YMDvsTheWorld(YMDID, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDToBeatmapSet, includeMods=0, excludeMods=0, count=200):
@@ -423,7 +494,11 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
     for x in userScores[0:count]:
         filteredCountrySet.add(IDToUser[x[0]].country)
     filteredCountryList = sorted(filteredCountrySet, key=lambda item: countryCodes[item])
-    file = open("html/rankedSpecificFCs.html", "w")
+    IDtoStoredData = {}
+    file = open("last month/previousRanked.pkl", "rb")
+    lastMonth = pickle.load(file)
+    file.close()
+    file = open("html/rankedSpecificFCs.html", "w", encoding="utf-8")
     file.write("""<!DOCTYPE html>
     <html lang="en">
       <head>
@@ -496,15 +571,58 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
     rank = 1
     for x in userScores[:count]:
         file.write("""      <tr class=\"""" + countryCodes[IDToUser[x[0]].country].replace(" ", "_") + """">
-            <td>""" + str(rank) + """</td>
+            <td>""" + str(rank))
+        if x[0] in lastMonth:
+            change = lastMonth[x[0]][0] - rank
+            if change == 0:
+                file.write(""" <span class="rank_no_change">(→)</span>""")
+            if change > 0:
+                file.write(""" <span class="rank_up">(+"""+str(change)+")</span>")
+            if change < 0:
+                file.write(""" <span class="rank_down">("""+str(change)+")</span>")
+        else:
+            file.write(""" <span class="rank_new">(New)</span>""")
+        file.write("""</td>
             <td class="user_name">
               <a>""" + IDToUser[x[0]].name + """</a>
             </td>
-            <td>""" + str(x[1]) + " ("+"{:.2f}".format(100*x[1]/len(allSet))+"""%)</td>
-            <td>""" + str(x[2]) + " ("+"{:.2f}".format(100*x[2]/len(rainSet))+"""%)</td>
-            <td>""" + str(IDtoRainRank[x[0]])+"""</td>
+            <td>""" + str(x[1]) + " ("+"{:.2f}".format(100*x[1]/len(allSet))+"%)")
+        if x[0] in lastMonth:
+            change = x[1]/len(allSet) - lastMonth[x[0]][1]
+            if change >= 0:
+                if change >= 0.0095:
+                    file.write(""" <span class="rank_up">(+"""+"{:.1f}".format(100*change)+"%)</span>")
+                else:
+                    file.write(""" <span class="pp_100">(+""" + "{:.1f}".format(100 * change) + "%)</span>")
+            else:
+                file.write(""" <span class="rank_down">("""+"{:.1f}".format(100*change)+"%)</span>")
+        file.write("""</td>
+            <td>""" + str(x[2]) + " ("+"{:.2f}".format(100*x[2]/len(rainSet))+"%)")
+        if x[0] in lastMonth:
+            change = x[2]/len(rainSet) - lastMonth[x[0]][3]
+            if change >= 0:
+                if change >= 0.0095:
+                    file.write(""" <span class="rank_up">(+"""+"{:.1f}".format(100*change)+"%)</span>")
+                else:
+                    file.write(""" <span class="pp_100">(+""" + "{:.1f}".format(100 * change) + "%)</span>")
+            else:
+                file.write(""" <span class="rank_down">("""+"{:.1f}".format(100*change)+"%)</span>")
+        file.write("""</td>
+            <td>""" + str(IDtoRainRank[x[0]]))
+        if x[0] in lastMonth:
+            change = lastMonth[x[0]][2] - IDtoRainRank[x[0]]
+            if change == 0:
+                file.write(""" <span class="rank_no_change">(→)</span>""")
+            if change > 0:
+                file.write(""" <span class="rank_up">(+"""+str(change)+")</span>")
+            if change < 0:
+                file.write(""" <span class="rank_down">("""+str(change)+")</span>")
+        else:
+            file.write(""" <span class="rank_new">(New)</span>""")
+        file.write("""</td>
           </tr>
 """)
+        IDtoStoredData[x[0]] = (rank, x[1]/len(allSet), IDtoRainRank[x[0]], x[2]/len(rainSet))
         rank += 1
     file.write("""    </tbody>
       </table>
@@ -568,23 +686,28 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
       });
     </script>
     </html>""")
+    file.close()
+    file = open("this month/previousRanked.pkl", "wb")
+    pickle.dump(IDtoStoredData, file)
+    file.close()
 
 
-# file = open("userIDToLovedPlays.pkl", "rb")
-# userIDToLovedPlays = pickle.load(file)
-# file.close()
-# file = open("userIDToRankedPlays.pkl", "rb")
-# userIDToRankedPlays = pickle.load(file)
-# file.close()
-# file = open("IDToUser.pkl", "rb")
-# IDToUser = pickle.load(file)
-# file.close()
-# file = open("countryCodes.pkl", "rb")
-# countryCodes = pickle.load(file)
-# file.close()
-# file = open("IDToBeatmap.pkl", "rb")
-# IDToBeatmap = pickle.load(file)
-# file.close()
-# file = open("IDToBeatmapSet.pkl", "rb")
-# IDToBeatmapSet = pickle.load(file)
-# file.close()
+file = open("userIDToLovedPlays.pkl", "rb")
+userIDToLovedPlays = pickle.load(file)
+file.close()
+file = open("userIDToRankedPlays.pkl", "rb")
+userIDToRankedPlays = pickle.load(file)
+file.close()
+file = open("IDToUser.pkl", "rb")
+IDToUser = pickle.load(file)
+file.close()
+file = open("countryCodes.pkl", "rb")
+countryCodes = pickle.load(file)
+file.close()
+file = open("IDToBeatmap.pkl", "rb")
+IDToBeatmap = pickle.load(file)
+file.close()
+file = open("IDToBeatmapSet.pkl", "rb")
+IDToBeatmapSet = pickle.load(file)
+file.close()
+specificFCsLeaderboard(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
