@@ -88,14 +88,17 @@ def printFarmMaps(farmMaps, IDAndModToPPAndScore, IDToBeatmap, IDToBeatmapSet, n
 def printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, user=0, count=100, multiuser=False):
     beatmapIDtoUserList = {}
     beatmapIDtoPP = {}
+    beatmapIDtoDate = {}
     if multiuser:
         for x in plays:
             if x.beatmapID in beatmapIDtoUserList:
                 if x.pp > beatmapIDtoPP[x.beatmapID] - 0.01:
                     beatmapIDtoUserList[x.beatmapID].append(x.userID)
+                    beatmapIDtoDate[x.beatmapID] = min(beatmapIDtoDate[x.beatmapID], x.date)
             else:
                 beatmapIDtoUserList[x.beatmapID] = [x.userID]
                 beatmapIDtoPP[x.beatmapID] = x.pp
+                beatmapIDtoDate[x.beatmapID] = x.date
     plays = playFilter(plays)
     pp = ppCalculate(plays)
     filename = "html/" + name + "/"
@@ -139,7 +142,14 @@ def printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, user=0, count
     rank = 1
     for x in plays[:count]:
         file.write("""
-        <tr>
+        <tr""")
+        if multiuser:
+            if beatmapIDtoDate[x.beatmapID] >= 1664540006:
+                file.write(""" class="recent\"""")
+        else:
+            if x.date >= 1664540006:
+                file.write(""" class="recent\"""")
+        file.write(""">
         <td>"""+str(rank)+"""</td>
         <td><a href="https://osu.ppy.sh/b/"""+str(x.beatmapID)+"""?m=2" target="_blank">"""+IDToBeatmapSet[IDToBeatmap[x.beatmapID].beatmapSetID].title+" ["+IDToBeatmap[x.beatmapID].difficultyName+"""]</a> </td>
         <td>""")
@@ -269,7 +279,7 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
 """ +
 ("""<p>There is a separate leaderboard that bans the """ + str(len(banSet)) + """ most overweighted maps. Click the top of the table to sort.</p>
 """ if hasBanList else "")
-+ """<p>Using 1st October 2022 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
++ """<p>Using 1st November 2022 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
 <p><a href=\""""+name+"""/all.html">Top 200 plays overall</a></p>
 <p><a href=\""""+name+"""/farm.html">Top 1000 farm maps</a></p>
 <div class="search_field">
@@ -536,7 +546,7 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
     <p>This allows users to compete without playing 3000 Cups/Salads/Platters.</p>
     <p>I arbitrarily chose 3.5* as the cutoff.</p>
     <p> It's approximately the border between Platter & Rain, and includes <a href="http://osu.ppy.sh/b/283299">several</a> <a href="http://osu.ppy.sh/b/369758">maps</a> <a href="https://osu.ppy.sh/b/2905286">that I</a> <a href="http://osu.ppy.sh/b/177970">found</a> <a href="https://osu.ppy.sh/b/2385749">difficult</a>.</p>
-    <p>Using 1st October 2022 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    <p>Using 1st November 2022 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
       <input id="user_search_button" type="button" value="search">
@@ -692,22 +702,21 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
     file.close()
 
 
-file = open("userIDToLovedPlays.pkl", "rb")
-userIDToLovedPlays = pickle.load(file)
-file.close()
-file = open("userIDToRankedPlays.pkl", "rb")
-userIDToRankedPlays = pickle.load(file)
-file.close()
-file = open("IDToUser.pkl", "rb")
-IDToUser = pickle.load(file)
-file.close()
-file = open("countryCodes.pkl", "rb")
-countryCodes = pickle.load(file)
-file.close()
-file = open("IDToBeatmap.pkl", "rb")
-IDToBeatmap = pickle.load(file)
-file.close()
-file = open("IDToBeatmapSet.pkl", "rb")
-IDToBeatmapSet = pickle.load(file)
-file.close()
-specificFCsLeaderboard(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
+# file = open("userIDToLovedPlays.pkl", "rb")
+# userIDToLovedPlays = pickle.load(file)
+# file.close()
+# file = open("userIDToRankedPlays.pkl", "rb")
+# userIDToRankedPlays = pickle.load(file)
+# file.close()
+# file = open("IDToUser.pkl", "rb")
+# IDToUser = pickle.load(file)
+# file.close()
+# file = open("countryCodes.pkl", "rb")
+# countryCodes = pickle.load(file)
+# file.close()
+# file = open("IDToBeatmap.pkl", "rb")
+# IDToBeatmap = pickle.load(file)
+# file.close()
+# file = open("IDToBeatmapSet.pkl", "rb")
+# IDToBeatmapSet = pickle.load(file)
+# file.close()

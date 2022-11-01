@@ -55,8 +55,9 @@ file2 = open("PlayerFCsPerRootYear.txt", "w")
 rank = 1
 for x in perYearList:
     file.write(str(rank) + " - {:.2f}".format(IDToBeatmap[x[0]].difficulty[0]) + "* " + IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].artist + " - " + IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].title + " [" + IDToBeatmap[x[0]].difficultyName + "]: " + "{:.2f}".format(x[2])+"\n")
-    if x[0] in playerSet:
+    if x[0] not in playerSet:
         file2.write(str(rank) + " - {:.2f}".format(IDToBeatmap[x[0]].difficulty[0]) + "* " + IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].artist + " - " + IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].title + " [" + IDToBeatmap[x[0]].difficultyName + "]: " + "{:.2f}".format(x[2]) + "\n")
     rank += 1
 file.close()
 file2.close()
+print(currentDate)
