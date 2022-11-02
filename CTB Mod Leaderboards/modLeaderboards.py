@@ -144,10 +144,10 @@ def printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, user=0, count
         file.write("""
         <tr""")
         if multiuser:
-            if beatmapIDtoDate[x.beatmapID] >= 1664540006:
+            if beatmapIDtoDate[x.beatmapID] >= 1664540006:  # 1667223513
                 file.write(""" class="recent\"""")
         else:
-            if x.date >= 1664540006:
+            if x.date >= 1664540006:  # 1667223513
                 file.write(""" class="recent\"""")
         file.write(""">
         <td>"""+str(rank)+"""</td>
@@ -546,6 +546,7 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
     <p>This allows users to compete without playing 3000 Cups/Salads/Platters.</p>
     <p>I arbitrarily chose 3.5* as the cutoff.</p>
     <p> It's approximately the border between Platter & Rain, and includes <a href="http://osu.ppy.sh/b/283299">several</a> <a href="http://osu.ppy.sh/b/369758">maps</a> <a href="https://osu.ppy.sh/b/2905286">that I</a> <a href="http://osu.ppy.sh/b/177970">found</a> <a href="https://osu.ppy.sh/b/2385749">difficult</a>.</p>
+    <p><a href="rarestFCs.html">Rarest FCs</a></p>
     <p>Using 1st November 2022 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
