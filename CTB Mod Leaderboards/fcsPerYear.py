@@ -73,7 +73,7 @@ file.write("""<!DOCTYPE html>
   <table class="bp">
     <thead>
       <tr>
-        <th data-sorter="false">Map</th>
+        <th>Map</th>
         <th>FCs</th>
         <th>FCs per<br>√year</th>
         <th>FCs per<br>>year</th>
@@ -149,13 +149,12 @@ playerFCs.write("""<!DOCTYPE html>
   </head>
   <body>
     <div class="content">
-<p><a href="rankedSpecificFCs.html">Return to leaderboard</a></p>
 <p><b>"""+playerName+"""'s FCs</b></p>
 <div class="bp-wrapper">
   <table class="bp">
     <thead>
       <tr>
-        <th data-sorter="false">Map</th>
+        <th>Map</th>
         <th>FCs</th>
         <th>FCs per<br>√year</th>
         <th>FCs per<br>>year</th>
@@ -190,13 +189,12 @@ playerNonFCs.write("""<!DOCTYPE html>
   </head>
   <body>
     <div class="content">
-<p><a href="rankedSpecificFCs.html">Return to leaderboard</a></p>
 <p><b>"""+playerName+"""'s To Do list</b></p>
 <div class="bp-wrapper">
   <table class="bp">
     <thead>
       <tr>
-        <th data-sorter="false">Map</th>
+        <th>Map</th>
         <th>FCs</th>
         <th>FCs per<br>√year</th>
         <th>FCs per<br>>year</th>
