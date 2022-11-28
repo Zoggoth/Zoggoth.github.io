@@ -19,6 +19,7 @@ class beatmap:
     beatmapSetID = 0
     difficultyName = ""
     AR = 0  # Beatmaps have aim, speed, strain etc. but only AR is included here for pp calculation purposes
+    HP = 0
     mode = 0  # 0: standard, 1: taiko, 2: catch, 3: mania
     status = 0  # 1: ranked, 2: approved, 3: qualified, 4: Loved (including TAG4)
     difficulty = {}  # EZ/NM/HR * HT/NM/DT = 9 possible difficulties

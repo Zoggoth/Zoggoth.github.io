@@ -235,7 +235,7 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
         banListString = "<p>Banlist</p>"
         for x in banSet:
             banListString += """\n<p><a href="https://osu.ppy.sh/b/"""+str(x)+"""?m=2" target="_blank">"""+IDToBeatmapSet[IDToBeatmap[x].beatmapSetID].title+" ["+IDToBeatmap[x].difficultyName+"""]</a></p>"""
-    IDtoStoredData = {}
+    IDToStoredData = {}
     file = open("last month/previous"+name+".pkl", "rb")
     lastMonth = pickle.load(file)
     file.close()
@@ -384,9 +384,9 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
         file.write("""</td>
       </tr>""")
         if hasBanList:
-            IDtoStoredData[x[0]] = (rank, x[1], banRanked[x[0]], IDToBannedPP[x[0]])
+            IDToStoredData[x[0]] = (rank, x[1], banRanked[x[0]], IDToBannedPP[x[0]])
         else:
-            IDtoStoredData[x[0]] = (rank, x[1])
+            IDToStoredData[x[0]] = (rank, x[1])
         rank += 1
     file.write("""    </tbody>
   </table>
@@ -452,7 +452,7 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
 </html>""")
     file.close()
     file = open("this month/previous"+name+".pkl", "wb")
-    pickle.dump(IDtoStoredData, file)
+    pickle.dump(IDToStoredData, file)
     file.close()
 
 
@@ -504,7 +504,7 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
     for x in userScores[0:count]:
         filteredCountrySet.add(IDToUser[x[0]].country)
     filteredCountryList = sorted(filteredCountrySet, key=lambda item: countryCodes[item])
-    IDtoStoredData = {}
+    IDToStoredData = {}
     file = open("last month/previousRanked.pkl", "rb")
     lastMonth = pickle.load(file)
     file.close()
@@ -540,7 +540,7 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
     <p>Ranking based on total number of ranked ctb maps each user has FCd.</p>
     <p>Data taken from top 10,000 players.</p>
     <p>HT/EZ FCs do not count (even if EZ makes the map harder).</p>
-    <p>Overwritten plays (a NM FC & a HR choke) do count.</p>
+    <p>Overwritten plays (a NM FC & a HR choke) still count as FCing, even if the FC comes after the choke.</p>
     <p>Lists of missing FCs are not currently provided, as most users have several thousand.</p>
     <p>In addition to total FCs, there is also a leaderboard that only tracks "difficult" plays. Click the top of the table to sort</p>
     <p>This allows users to compete without playing 3000 Cups/Salads/Platters.</p>
@@ -633,7 +633,7 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
         file.write("""</td>
           </tr>
 """)
-        IDtoStoredData[x[0]] = (rank, x[1]/len(allSet), IDtoRainRank[x[0]], x[2]/len(rainSet))
+        IDToStoredData[x[0]] = (rank, x[1]/len(allSet), IDtoRainRank[x[0]], x[2]/len(rainSet))
         rank += 1
     file.write("""    </tbody>
       </table>
@@ -699,7 +699,259 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
     </html>""")
     file.close()
     file = open("this month/previousRanked.pkl", "wb")
-    pickle.dump(IDtoStoredData, file)
+    pickle.dump(IDToStoredData, file)
+    file.close()
+
+
+def number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes, count = 2000):
+    mapAndCountryToBest = {}
+    for x in userIDToRankedPlays:
+        country = IDToUser[x].country
+        for y in userIDToRankedPlays[x]:
+            if mapAndCountryToBest.get((y.beatmapID, country), 0) == 0:
+                mapAndCountryToBest[(y.beatmapID, country)] = [y.score, [x]]
+            elif mapAndCountryToBest[(y.beatmapID, country)][0] < y.score:
+                mapAndCountryToBest[(y.beatmapID, country)] = [y.score, [x]]
+            elif mapAndCountryToBest[(y.beatmapID, country)][0] == y.score:
+                mapAndCountryToBest[(y.beatmapID, country)][1].append(x)
+            if mapAndCountryToBest.get((y.beatmapID, "All"), 0) == 0:
+                mapAndCountryToBest[(y.beatmapID, "All")] = [y.score, [x]]
+            elif mapAndCountryToBest[(y.beatmapID, "All")][0] < y.score:
+                mapAndCountryToBest[(y.beatmapID, "All")] = [y.score, [x]]
+            elif mapAndCountryToBest[(y.beatmapID, "All")][0] == y.score:
+                mapAndCountryToBest[(y.beatmapID, "All")][1].append(x)
+    for x in userIDToLovedPlays:
+        country = IDToUser[x].country
+        for y in userIDToLovedPlays[x]:
+            if mapAndCountryToBest.get((y.beatmapID, country), 0) == 0:
+                mapAndCountryToBest[(y.beatmapID, country)] = [y.score, [x]]
+            elif mapAndCountryToBest[(y.beatmapID, country)][0] < y.score:
+                mapAndCountryToBest[(y.beatmapID, country)] = [y.score, [x]]
+            elif mapAndCountryToBest[(y.beatmapID, country)][0] == y.score:
+                mapAndCountryToBest[(y.beatmapID, country)][1].append(x)
+            if mapAndCountryToBest.get((y.beatmapID, "All"), 0) == 0:
+                mapAndCountryToBest[(y.beatmapID, "All")] = [y.score, [x]]
+            elif mapAndCountryToBest[(y.beatmapID, "All")][0] < y.score:
+                mapAndCountryToBest[(y.beatmapID, "All")] = [y.score, [x]]
+            elif mapAndCountryToBest[(y.beatmapID, "All")][0] == y.score:
+                mapAndCountryToBest[(y.beatmapID, "All")][1].append(x)
+    IDToCountry1s = {}
+    IDToGlobal1s = {}
+    for x in mapAndCountryToBest:
+        if x[1] == "All":
+            setversion = set()
+            for y in mapAndCountryToBest[x][1]:
+                setversion.add(y)
+            for y in setversion:
+                IDToGlobal1s[y] = IDToGlobal1s.get(y, 0) + 1
+        else:
+            setversion = set()
+            for y in mapAndCountryToBest[x][1]:
+                setversion.add(y)
+            for y in setversion:
+                IDToCountry1s[y] = IDToCountry1s.get(y, 0) + 1
+    top2000Country = sorted(IDToCountry1s, key=lambda item: IDToCountry1s[item], reverse=True)
+    top2000Country = top2000Country[:count]
+    IDToCountryRank = {}
+    rank = 1
+    for x in top2000Country:
+        IDToCountryRank[x] = rank
+        rank += 1
+    top2000Country.sort(key=lambda item: IDToGlobal1s.get(item,0), reverse=True)
+    IDToGlobalRank = {}
+    rank = 1
+    for x in top2000Country:
+        IDToGlobalRank[x] = rank
+        rank += 1
+    filteredCountrySet = set()
+    for x in top2000Country:
+        filteredCountrySet.add(IDToUser[x].country)
+    filteredCountryList = sorted(filteredCountrySet, key=lambda item: countryCodes[item])
+    IDToStoredData = {}
+    file = open("last month/previousNumber1s.pkl", "rb")
+    lastMonth = pickle.load(file)
+    file.close()
+    file = open("html/number1s.html", "w", encoding="utf-8")
+    file.write("""<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
+    <link rel="stylesheet" href="../../style.css">
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"></script>
+    <script type="text/javascript" src="../../Mottie-tablesorter/js/jquery.tablesorter.js"></script>
+    <script>
+    $(function(){
+        $('table').tablesorter({
+            usNumberFormat : false,
+            sortReset      : true,
+            sortRestart    : true
+        });
+    });
+    </script>
+        <title>
+    Number 1s ranking</title>
+      </head>
+      <body>
+        <div class="content">
+    <p><a href="index.html">Return to main page</a></p>
+    <br>
+    <p>Ranking based on total number of first places</p>
+    <p>If 2 people have the same score, they both get first (normally goes to whoever set the score first)</p>
+    <p>Data taken from top 10,000 players.</p>
+    <p>Using 1st November 2022 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    <div class="search_field">
+      <input id="user_search_text" type="text" placeholder="Search by username...">
+      <input id="user_search_button" type="button" value="search">
+      <span>(Case-insensitive)</span>
+    </div>
+    <div class="search_field">
+      <label for="country_ranking">Filter by country:</label>
+      <select id="country_ranking">
+        <option value="all" selected>All country</option>
+    """)
+    for x in filteredCountryList:
+        file.write("""    <option value=\"""" + countryCodes[x].replace(" ", "_") + """">""" + countryCodes[x] + """</option>
+    """)
+    file.write("""  </select>
+        </div>
+        <div class="search_field">
+          <input id="reset" type="button" value="Clear search result">
+        </div>
+        <div id="ranking-wrapper">
+          <table class="tablesorter">
+            <thead>
+              <tr>
+                <th data-lockedorder="asc" class="text-left">#</th>
+                <th data-sorter="false" id="user_name_head">Name</th>
+                <th data-lockedorder="desc">Global #1s</th>
+                <th data-lockedorder="desc">Country #1s</th>
+                <th data-lockedorder="asc" class="text-left">#</th>
+              </tr>
+            </thead>
+            <tbody>
+        """)
+    for x in top2000Country:
+        file.write("""      <tr class=\"""" + countryCodes[IDToUser[x].country].replace(" ", "_") + """">
+                <td>""" + str(IDToGlobalRank[x]))
+        if x in lastMonth:
+            change = lastMonth[x][0] - IDToGlobalRank[x]
+            if change == 0:
+                file.write(""" <span class="rank_no_change">(→)</span>""")
+            if change > 0:
+                file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+            if change < 0:
+                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+        else:
+            file.write(""" <span class="rank_new">(New)</span>""")
+        file.write("""</td>
+                <td class="user_name">
+                  <a>""" + IDToUser[x].name + """</a>
+                </td>
+                <td>""" + str(IDToGlobal1s.get(x,0)))
+        if x in lastMonth:
+            change = IDToGlobal1s.get(x,0) - lastMonth[x][1]
+            if change == 0:
+                file.write(""" <span class="rank_no_change">(→)</span>""")
+            if change > 0:
+                file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+            if change < 0:
+                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+        file.write("""</td>
+                <td>""" + str(IDToCountry1s[x]))
+        if x in lastMonth:
+            change = IDToCountry1s[x] - lastMonth[x][3]
+            if change == 0:
+                file.write(""" <span class="rank_no_change">(→)</span>""")
+            if change > 0:
+                file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+            if change < 0:
+                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+        file.write("""</td>
+                <td>""" + str(IDToCountryRank[x]))
+        if x in lastMonth:
+            change = lastMonth[x][2] - IDToCountryRank[x]
+            if change == 0:
+                file.write(""" <span class="rank_no_change">(→)</span>""")
+            if change > 0:
+                file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+            if change < 0:
+                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+        else:
+            file.write(""" <span class="rank_new">(New)</span>""")
+        file.write("""</td>
+              </tr>
+    """)
+        IDToStoredData[x] = (IDToGlobalRank[x], IDToGlobal1s.get(x,0), IDToCountryRank[x], IDToCountry1s[x])
+    file.write("""    </tbody>
+          </table>
+        </div>
+          </div>
+          </body>
+        <script>
+          "use strict";
+          window.addEventListener('pageshow', () => {
+            $("#country_ranking").val("all");
+            $("#user_search_text").val("");
+          });
+          $(() => {
+            const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\\\]/g, '\\\\$&');
+            const resetTable = () => $("tr").removeClass('hide');
+            let isNameFiltered = false;
+            let isCountryFiltered = false;
+            $("#user_search_button").on("click", () => {
+              if(isNameFiltered) {
+                resetTable();
+              }
+              const search_text = $("#user_search_text").val();
+              $(".user_name a").each((_, e) => {
+                const user_elem = $(e);
+                const user_parent = user_elem.closest("tr");
+                const val = user_elem.text().toUpperCase();
+                if (val.match(escapeRegExp(search_text.toUpperCase()))) {
+                  user_parent.removeClass('hide');
+                } else {
+                  user_parent.addClass('hide');
+                }
+              });
+              isNameFiltered = true;
+            });
+
+            $("#reset").on("click", () => {
+              resetTable();
+              $("#country_ranking").val("all");
+              $("#user_search_text").val("");
+            });
+
+            $("#country_ranking").on("change", () => {
+              if (isCountryFiltered) {
+                resetTable();
+              }
+              const selected_country = $("#country_ranking").val();
+              if (selected_country === "all") {
+                resetTable();
+              } else {
+                $("tbody tr").each((_, e) => {
+                  const user_row = $(e);
+                  if (user_row.attr("class") === selected_country) {
+                    user_row.removeClass('hide');
+                  } else {
+                    user_row.addClass('hide');
+                  }
+                });
+                isCountryFiltered = true;
+              }
+            });
+          });
+        </script>
+        </html>""")
+    file.close()
+    file = open("this month/previousNumber1s.pkl", "wb")
+    pickle.dump(IDToStoredData, file)
     file.close()
 
 
@@ -721,3 +973,4 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
 # file = open("IDToBeatmapSet.pkl", "rb")
 # IDToBeatmapSet = pickle.load(file)
 # file.close()
+# number1s(userIDToRankedPlays,userIDToLovedPlays,IDToUser,countryCodes)

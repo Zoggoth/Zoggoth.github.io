@@ -26,7 +26,7 @@ for x in userIDToRankedPlays:
         currentDate = max(currentDate, y.date)
         if y.beatmapID in IDtoFCs:
             if y.misses == 0:
-                if y.modCode & 258 == 0:
+                if y.modCode & 258 == 0: # 258 == 0 for NM. 274 == 16 for HR. 322 == 64 for DT
                     FCSet.add(y.beatmapID)
     for y in FCSet:
         IDtoFCs[y] += 1
@@ -76,7 +76,7 @@ file.write("""<!DOCTYPE html>
         <th>Map</th>
         <th>FCs</th>
         <th>FCs per<br>√year</th>
-        <th>FCs per<br>>year</th>
+        <th>FCs per<br>year</th>
         <th>SR</th>
         <th>PP</th>
       </tr>
@@ -106,7 +106,7 @@ for x in perYearList:
     file.write("{:.2f}".format(IDToBeatmap[x[0]].difficulty[0]))
     file.write("""</td>
         <td>""")
-    file.write("{:.2f}".format(tools.catchPP(IDToBeatmap[x[0]].difficulty[0],IDToBeatmap[x[0]].maxCombo,IDToBeatmap[x[0]].maxCombo,0,IDToBeatmap[x[0]].AR,0,1)))
+    file.write("{:.2f}".format(tools.catchPP(IDToBeatmap[x[0]].difficulty[0],IDToBeatmap[x[0]].maxCombo,IDToBeatmap[x[0]].maxCombo,0,tools.modifiedAR(IDToBeatmap[x[0]].AR,0),0,1)))
     file.write("""</td>
       </tr>""")
 file.write("""
@@ -229,8 +229,7 @@ for x in perYearList:
         playerFCs.write("""</td>
                         <td>""")
         playerFCs.write("{:.2f}".format(
-            tools.catchPP(IDToBeatmap[x[0]].difficulty[0], IDToBeatmap[x[0]].maxCombo, IDToBeatmap[x[0]].maxCombo, 0,
-                          IDToBeatmap[x[0]].AR, 0, 1)))
+            tools.catchPP(IDToBeatmap[x[0]].difficulty[0], IDToBeatmap[x[0]].maxCombo, IDToBeatmap[x[0]].maxCombo, 0, tools.modifiedAR(IDToBeatmap[x[0]].AR,0), 0, 1)))
         playerFCs.write("""</td>
                       </tr>""")
     else:
@@ -257,8 +256,7 @@ for x in perYearList:
         playerNonFCs.write("""</td>
                         <td>""")
         playerNonFCs.write("{:.2f}".format(
-            tools.catchPP(IDToBeatmap[x[0]].difficulty[0], IDToBeatmap[x[0]].maxCombo, IDToBeatmap[x[0]].maxCombo, 0,
-                          IDToBeatmap[x[0]].AR, 0, 1)))
+            tools.catchPP(IDToBeatmap[x[0]].difficulty[0], IDToBeatmap[x[0]].maxCombo, IDToBeatmap[x[0]].maxCombo, 0, tools.modifiedAR(IDToBeatmap[x[0]].AR,0), 0, 1)))
         playerNonFCs.write("""</td>
                       </tr>""")
 playerNonFCs.write("""
