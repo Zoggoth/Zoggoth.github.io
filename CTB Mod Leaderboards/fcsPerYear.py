@@ -85,7 +85,7 @@ file.write("""<!DOCTYPE html>
 """)
 for x in perYearList:
     file.write("""      <tr""")
-    if IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].date >= 1664540006:  # 1667223513
+    if IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].date >= 1667223513:
         file.write(""" class="recent\"""")
     file.write(""">
         <td><a href="https://osu.ppy.sh/b/""")
@@ -207,7 +207,7 @@ playerNonFCs.write("""<!DOCTYPE html>
 for x in perYearList:
     if x[0] in playerSet:
         playerFCs.write("""      <tr""")
-        if IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].date >= 1664540006:  # 1667223513
+        if IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].date >= 1667223513:
             playerFCs.write(""" class="recent\"""")
         playerFCs.write(""">
                         <td><a href="https://osu.ppy.sh/b/""")
@@ -234,7 +234,7 @@ for x in perYearList:
                       </tr>""")
     else:
         playerNonFCs.write("""      <tr""")
-        if IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].date >= 1664540006:  # 1667223513
+        if IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].date >= 1667223513:
             playerNonFCs.write(""" class="recent\"""")
         playerNonFCs.write(""">
                         <td><a href="https://osu.ppy.sh/b/""")

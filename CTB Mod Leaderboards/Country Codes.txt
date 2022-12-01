@@ -302,3 +302,5 @@ UZ
 Uzbekistan
 VU
 Vanuatu
+MP
+Northern Mariana Islands

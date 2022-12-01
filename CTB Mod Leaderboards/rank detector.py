@@ -23,6 +23,9 @@ file.close()
 file = open("userIDToLovedPlays.pkl", "rb")
 userIDToLovedPlays = pickle.load(file)
 file.close()
+file = open("IDToBeatmap.pkl", "rb")
+IDToBeatmap = pickle.load(file)
+file.close()
 allplays = []
 try:
     allplays = userIDToRankedPlays[usercode] + userIDToLovedPlays[usercode]
@@ -41,7 +44,10 @@ topScoreList = sorted(IDToTopScore.items(), key=lambda item: item[1].misses, rev
 topScoreList.sort(key=lambda item: item[1].rank[0])
 currentrank = ""
 misses = False
+count = 0
 for x in topScoreList:
+    if IDToBeatmap[x.beatmapID].status == 1:
+        count += 1
     if x[1].rank[0] == "X":
         exit()
     if x[1].rank[0] != currentrank:
@@ -59,3 +65,4 @@ for x in topScoreList:
             print("Without misses")
             misses = False
     print("https://osu.ppy.sh/scores/fruits/" + str(x[1].ID))
+print(count)

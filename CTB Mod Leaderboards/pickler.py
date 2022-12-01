@@ -146,3 +146,4 @@ modLeaderboards.modLeaderboard("NM", excludeMods=1370, userIDToPlays=userIDToRan
 modLeaderboards.modLeaderboard("Loved", userIDToPlays=userIDToLovedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet, banSet={1529757, 2572147, 1257904, 2571858, 1267365, 1165130})
 modLeaderboards.YMDvsTheWorld(4158549, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
 modLeaderboards.specificFCsLeaderboard(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
+modLeaderboards.number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes)
