@@ -18,6 +18,7 @@ class beatmap:
     ID = 0
     beatmapSetID = 0
     difficultyName = ""
+    length = 0
     AR = 0  # Beatmaps have aim, speed, strain etc. but only AR is included here for pp calculation purposes
     HP = 0
     mode = 0  # 0: standard, 1: taiko, 2: catch, 3: mania
@@ -26,8 +27,8 @@ class beatmap:
     maxCombo = 0
     accuracyTotal = 0
 
-    def debugPrint(self):
-        print(str(self.ID) + " " + str(self.beatmapSetID) + " " + self.difficultyName + " " + str(self.AR) + " " + str(self.mode) + " " + str(self.status) + " " + str(self.difficulty) + " " + str(self.maxCombo) + " " + str(self.accuracyTotal))
+    def __repr__(self):
+        return str(self.ID) + " " + str(self.beatmapSetID) + " " + self.difficultyName + " " + str(self.AR) + " " + str(self.mode) + " " + str(self.status) + " " + str(self.difficulty) + " " + str(self.maxCombo) + " " + str(self.accuracyTotal)
     # There's a whole bunch of things like CS or BPM that people could feasibly want to filter by
     # The only one I might actually do is mapper (user_id)
 
@@ -39,8 +40,8 @@ class user:
     pp = 0
     ppRank = 0
 
-    def debugPrint(self):
-        print(str(self.ID) + " " + self.name + " " + self.country + " " + str(self.pp) + " " + str(self.ppRank))
+    def __repr__(self):
+        return str(self.ID) + " " + self.name + " " + self.country + " " + str(self.pp) + " " + str(self.ppRank)
 
 
 class play:
@@ -56,8 +57,8 @@ class play:
     pp = 0
     date = datetime.datetime(1970, 1, 1)
 
-    def debugPrint(self):
-        print(str(self.ID) + " " + str(self.beatmapID) + " " + str(self.userID) + " " + str(self.score) + " " + str(self.combo) + " " + self.rank + " " + str(self.misses) + " " + str(self.drpmiss) + " " + str(self.modCode) + " " + str(self.pp))
+    def __repr__(self):
+        return str(self.ID) + " " + str(self.beatmapID) + " " + str(self.userID) + " " + str(self.score) + " " + str(self.combo) + " " + self.rank + " " + str(self.misses) + " " + str(self.drpmiss) + " " + str(self.modCode) + " " + str(self.pp)
 
 
 def modCodeToText(modCode):
