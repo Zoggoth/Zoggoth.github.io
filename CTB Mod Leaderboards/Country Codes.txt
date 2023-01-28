@@ -1,31 +1,37 @@
-AU
-Australia
-FR
-France
-DE
-Germany
-ID
-Indonesia
-MY
-Malaysia
-SG
-Singapore
-KR
-South Korea
-SE
-Sweden
-GB
-United Kingdom
-US
-United States
+AF
+Afghanistan
+AX
+Aland Islands
+AL
+Albania
 DZ
 Algeria
+AS
+American Samoa
+AD
+Andorra
+AO
+Angola
+AI
+Anguilla
+AG
+Antigua and Barbuda
 AR
 Argentina
+AM
+Armenia
+AW
+Aruba
+AP
+Asia/Pacific Region
+AU
+Australia
 AT
 Austria
 AZ
 Azerbaijan
+BS
+Bahamas
 BH
 Bahrain
 BD
@@ -36,8 +42,18 @@ BY
 Belarus
 BE
 Belgium
+BZ
+Belize
+BJ
+Benin
+BM
+Bermuda
 BT
 Bhutan
+BO
+Bolivia
+BA
+Bosnia and Herzegovina
 BW
 Botswana
 BR
@@ -46,16 +62,38 @@ BN
 Brunei
 BG
 Bulgaria
+BF
+Burkina Faso
+BI
+Burundi
+CV
+Cabo Verde
 KH
 Cambodia
+CM
+Cameroon
 CA
 Canada
+BQ
+Caribbean Netherlands
+KY
+Cayman Islands
+CF
+Central African Republic
+TD
+Chad
 CL
 Chile
 CN
 China
+CX
+Christmas Island
 CO
 Colombia
+KM
+Comoros
+CG
+Congo
 CR
 Costa Rica
 CI
@@ -74,28 +112,78 @@ DK
 Denmark
 DJ
 Djibouti
+DM
+Dominica
+DO
+Dominican Republic
 EC
 Ecuador
 EG
 Egypt
 SV
 El Salvador
+GQ
+Equatorial Guinea
+ER
+Eritrea
 EE
 Estonia
+SZ
+Eswatini
 ET
 Ethiopia
+EU
+Europe
+FK
+Falkland Islands (Malvinas)
+FO
+Faroe Islands
+FM
+Micronesia
 FJ
 Fiji
 FI
 Finland
+FR
+France
+GF
+French Guiana
+PF
+French Polynesia
 GA
 Gabon
+GM
+Gambia
+GE
+Georgia
+DE
+Germany
 GH
 Ghana
+GI
+Gibraltar
 GR
 Greece
+GL
+Greenland
+GD
+Grenada
+GP
+Guadeloupe
 GU
 Guam
+GT
+Guatemala
+GG
+Guernsey
+GN
+Guinea
+GW
+Guinea-Bissau
+GY
+Guyana
+HT
+Haiti
 HN
 Honduras
 HK
@@ -106,12 +194,16 @@ IS
 Iceland
 IN
 India
+ID
+Indonesia
 IQ
 Iraq
 IE
 Ireland
 IR
 Iran
+IM
+Isle of Man
 IL
 Israel
 IT
@@ -120,58 +212,114 @@ JM
 Jamaica
 JP
 Japan
+JE
+Jersey
 JO
 Jordan
+KZ
+Kazakhstan
 KE
 Kenya
+KI
+Kiribati
 XK
 Kosovo
 KW
 Kuwait
+KG
+Kyrgyzstan
+LA
+Laos
 LV
 Latvia
+LB
+Lebanon
+LS
+Lesotho
+LR
+Liberia
+LY
+Libya
 LI
 Liechtenstein
 LT
 Lithuania
 LU
 Luxembourg
+MO
+Macau
 MG
 Madagascar
+MW
+Malawi
+MY
+Malaysia
 MV
 Maldives
+ML
+Mali
 MT
 Malta
+MH
+Marshall Islands
+MQ
+Martinique
+MR
+Mauritania
 MU
 Mauritius
+YT
+Mayotte
 MX
 Mexico
+MD
+Moldova
 MC
 Monaco
 MN
 Mongolia
+ME
+Montenegro
 MA
 Morocco
+MZ
+Mozambique
 MM
 Myanmar
+NA
+Namibia
+NR
+Nauru
 NP
 Nepal
 NL
 Netherlands
+AN
+Netherlands Antilles
 NC
 New Caledonia
 NZ
 New Zealand
+NI
+Nicaragua
+NE
+Niger
 NG
 Nigeria
+NU
+Niue
 MK
 North Macedonia
+MP
+Northern Mariana Islands
 NO
 Norway
 OM
 Oman
 PK
 Pakistan
+PW
+Palau
 PA
 Panama
 PG
@@ -182,125 +330,143 @@ PE
 Peru
 PH
 Philippines
+PN
+Pitcairn
 PL
 Poland
 PT
 Portugal
+PR
+Puerto Rico
 QA
 Qatar
+RE
+Reunion
 RO
 Romania
 RU
 Russia
+RW
+Rwanda
+BL
+Saint Barthelemy
+KN
+Saint Kitts and Nevis
+LC
+Saint Lucia
+MF
+Saint Martin
+PM
+Saint Pierre and Miquelon
+VC
+Saint Vincent and the Grenadines
+WS
+Samoa
+SM
+San Marino
+ST
+Sao Tome and Principe
 SA
 Saudi Arabia
 SN
 Senegal
+RS
+Serbia
+SC
+Seychelles
 SL
 Sierra Leone
+SG
+Singapore
+SX
+Sint Maarten
 SK
 Slovakia
 SI
 Slovenia
+SB
+Solomon Islands
+SO
+Somalia
 ZA
 South Africa
+KR
+South Korea
 ES
 Spain
 LK
 Sri Lanka
+PS
+Palestine
 SD
 Sudan
+SR
+Suriname
+SJ
+Svalbard and Jan Mayen
+SE
+Sweden
 CH
 Switzerland
 SY
 Syria
 TW
 Taiwan
+TJ
+Tajikistan
 TH
 Thailand
+CD
+The Democratic Republic of the Congo
+TL
+Timor-Leste
 TG
 Togo
+TK
+Tokelau
 TT
 Trinidad and Tobago
 TN
 Tunisia
 TR
 Turkey
+TM
+Turkmenistan
+TC
+Turks and Caicos Islands
+TV
+Tuvalu
+UG
+Uganda
 UA
 Ukraine
 AE
 United Arab Emirates
+GB
+United Kingdom
 TZ
 Tanzania
+US
+United States
 UY
 Uruguay
-VE
-Venezuela
-VN
-Vietnam
-ZW
-Zimbabwe
-AL
-Albania
-AO
-Angola
-AX
-Åland Islands
-BA
-Bosnia and Herzegovina
-BO
-Bolivia
-BZ
-Belize
-CV
-Cabo Verde
-DO
-Dominican Republic
-GE
-Georgia
-GF
-French Guiana
-GI
-Gibraltar
-GP
-Guadeloupe
-GT
-Guatemala
-IM
-Isle of Man
-JE
-Jersey
-KG
-Kyrgyzstan
-KZ
-Kazakhstan
-LA
-Laos
-LY
-Libya
-MD
-Moldova
-MO
-Macau
-MQ
-Martinique
-NI
-Nicaragua
-PF
-French Polynesia
-PR
-Puerto Rico
-PS
-Palestine
-RE
-Reunion
-RS
-Serbia
-TJ
-Tajikistan
 UZ
 Uzbekistan
 VU
 Vanuatu
-MP
-Northern Mariana Islands
+VE
+Venezuela
+VN
+Vietnam
+VG
+Virgin Islands, British
+VI
+Virgin Islands, U.S.
+WF
+Wallis and Futuna
+YE
+Yemen
+ZM
+Zambia
+ZW
+Zimbabwe

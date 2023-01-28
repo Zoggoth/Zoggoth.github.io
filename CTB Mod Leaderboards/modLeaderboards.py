@@ -1,6 +1,8 @@
 import tools
 import pickle
 
+oneMonthAgo = 1669815464
+oneYearAgo = 1640995200
 
 def playFilter(playList, includeMods=0, excludeMods=0):
     mapSet = set()
@@ -144,10 +146,10 @@ def printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, user=0, count
         file.write("""
         <tr""")
         if multiuser:
-            if beatmapIDtoDate[x.beatmapID] >= 1669815464: #
+            if beatmapIDtoDate[x.beatmapID] >= oneMonthAgo: #
                 file.write(""" class="recent\"""")
         else:
-            if x.date >= 1669815464: #
+            if x.date >= oneMonthAgo: #
                 file.write(""" class="recent\"""")
         file.write(""">
         <td>"""+str(rank)+"""</td>
@@ -216,6 +218,13 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
     IDAndModToPPAndScore = {}
     for x in IDToPP[:count]:
         filteredPlays = playFilter(userIDToPlays[x[0]], includeMods=includeMods, excludeMods=excludeMods)
+        recent = False
+        for y in filteredPlays[0:100]:
+            if y.date >= oneYearAgo:
+                recent = True
+                break
+        if not recent:
+            continue
         totalpp = ppCalculate(filteredPlays)
         multiplier = float(1)
         for y in filteredPlays:
@@ -236,9 +245,13 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
         for x in banSet:
             banListString += """\n<p><a href="https://osu.ppy.sh/b/"""+str(x)+"""?m=2" target="_blank">"""+IDToBeatmapSet[IDToBeatmap[x].beatmapSetID].title+" ["+IDToBeatmap[x].difficultyName+"""]</a></p>"""
     IDToStoredData = {}
-    file = open("last month/previous"+name+".pkl", "rb")
-    lastMonth = pickle.load(file)
-    file.close()
+    lastMonth = []
+    try:
+        file = open("last month/previous"+name+".pkl", "rb")
+        lastMonth = pickle.load(file)
+        file.close()
+    except:
+        lastMonth = []
     file = open("html/"+name+".html", "w", encoding="utf-8")
     file.write("""<!DOCTYPE html>
 <html lang="en">
@@ -465,7 +478,7 @@ def YMDvsTheWorld(YMDID, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
             printPlays(YMDPlays, IDToBeatmap, IDToBeatmapSet, IDToUser, "Total", YMDID, count)
         else:
             filteredPlays = playFilter(userIDToPlays[x], includeMods=includeMods, excludeMods=excludeMods)
-            allPlays.extend(filteredPlays[0:100])
+            allPlays.extend(filteredPlays[0:count])
             IDToPP.append((x, ppCalculate(filteredPlays)))
     allPlays.sort(key=lambda item: item.pp, reverse=True)
     printPlays(allPlays, IDToBeatmap, IDToBeatmapSet, IDToUser, "Total", count=count, multiuser=True)
