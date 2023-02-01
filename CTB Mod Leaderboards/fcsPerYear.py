@@ -3,6 +3,8 @@ import pickle
 import math
 import tools
 
+oneMonthAgo = 1672493880
+
 player = 2799946
 file = open("userIDToRankedPlays.pkl", "rb")
 userIDToRankedPlays = pickle.load(file)
@@ -85,7 +87,7 @@ file.write("""<!DOCTYPE html>
 """)
 for x in perYearList:
     file.write("""      <tr""")
-    if IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].date >= 1669815464: #
+    if IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].date >= oneMonthAgo: #
         file.write(""" class="recent\"""")
     file.write(""">
         <td><a href="https://osu.ppy.sh/b/""")
@@ -377,7 +379,7 @@ input[type="button"] {
 for x in perYearList:
     if x[0] in playerSet:
         playerFCs.write("""      <tr""")
-        if IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].date >= 1669815464: #
+        if IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].date >= oneMonthAgo: #
             playerFCs.write(""" class="recent\"""")
         playerFCs.write(""">
                         <td><a href="https://osu.ppy.sh/b/""")
