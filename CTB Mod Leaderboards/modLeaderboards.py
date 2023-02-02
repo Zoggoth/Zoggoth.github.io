@@ -102,7 +102,7 @@ def printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, user=0, count
                 beatmapIDtoPP[x.beatmapID] = x.pp
                 beatmapIDtoDate[x.beatmapID] = x.date
     plays = playFilter(plays)
-    pp = ppCalculate(plays)
+    pp = ppCalculate(plays, count)
     filename = "html/" + name + "/"
     if multiuser:
         filename += "all.html"
@@ -479,7 +479,6 @@ def YMDvsTheWorld(YMDID, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
         else:
             filteredPlays = playFilter(userIDToPlays[x], includeMods=includeMods, excludeMods=excludeMods)
             allPlays.extend(filteredPlays[0:count])
-            IDToPP.append((x, ppCalculate(filteredPlays)))
     allPlays.sort(key=lambda item: item.pp, reverse=True)
     printPlays(allPlays, IDToBeatmap, IDToBeatmapSet, IDToUser, "Total", count=count, multiuser=True)
 
@@ -985,4 +984,4 @@ def number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes, co
 # file = open("IDToBeatmapSet.pkl", "rb")
 # IDToBeatmapSet = pickle.load(file)
 # file.close()
-# specificFCsLeaderboard(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes, count=2000)
+# specificFCsLeaderboard(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
