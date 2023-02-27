@@ -148,3 +148,12 @@ modLeaderboards.modLeaderboard("Loved", userIDToPlays=userIDToLovedPlays, IDToUs
 modLeaderboards.YMDvsTheWorld(4158549, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
 modLeaderboards.specificFCsLeaderboard(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
 modLeaderboards.number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes)
+modLeaderboards.hundrethPlay(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap)
+userIDToConvertPlays = {}
+for x in userIDToRankedPlays:
+    convertsOnly = []
+    for y in userIDToRankedPlays[x]:
+        if IDToBeatmap[y.beatmapID].mode == 0:
+            convertsOnly.append(y)
+    userIDToConvertPlays[x] = convertsOnly
+modLeaderboards.modLeaderboard("Convert", userIDToPlays=userIDToConvertPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)

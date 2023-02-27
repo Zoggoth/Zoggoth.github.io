@@ -3,9 +3,11 @@ import pickle
 import math
 import tools
 
-oneMonthAgo = 1672493880
+oneMonthAgo = tools.oneMonthAgo
+zoggoth = 2799946
+edgar_figaro = 6508754
 
-player = 2799946
+player = zoggoth
 file = open("userIDToRankedPlays.pkl", "rb")
 userIDToRankedPlays = pickle.load(file)
 file.close()

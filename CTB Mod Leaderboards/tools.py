@@ -1,6 +1,9 @@
 import math
 import datetime
 
+oneMonthAgo = 1672493880
+oneYearAgo = 1643673600
+
 
 class beatmapSet:
     ID = 0
