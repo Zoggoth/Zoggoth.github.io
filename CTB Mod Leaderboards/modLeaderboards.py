@@ -223,6 +223,8 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
             if y.date >= oneYearAgo:
                 recent = True
                 break
+        printPlays(filteredPlays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, x[0])
+        filteredCountrySet.add(IDToUser[x[0]].country)
         if not recent:
             continue
         # totalpp = IDToUser[x[0]].pp
@@ -235,8 +237,6 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
             else:
                 IDAndModToPPAndScore[(y.beatmapID, y.modCode & 1370)] = [y.pp, y.pp*multiplier/totalpp]
             multiplier *= .95
-        printPlays(filteredPlays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, x[0])
-        filteredCountrySet.add(IDToUser[x[0]].country)
     farmMaps = sorted(IDAndModToPPAndScore, key=lambda item: IDAndModToPPAndScore[item][1], reverse=True)
     printFarmMaps(farmMaps, IDAndModToPPAndScore, IDToBeatmap, IDToBeatmapSet, name)
     filteredCountryList = sorted(filteredCountrySet, key=lambda item: countryCodes[item])
