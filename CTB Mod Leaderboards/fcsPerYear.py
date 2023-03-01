@@ -5,7 +5,6 @@ import tools
 
 oneMonthAgo = tools.oneMonthAgo
 zoggoth = 2799946
-edgar_figaro = 6508754
 
 player = zoggoth
 file = open("userIDToRankedPlays.pkl", "rb")
