@@ -1090,7 +1090,7 @@ def hundrethPlay(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000)
         file.write("""      <tr class=\"""" + countryCodes[IDToUser[x].country].replace(" ", "_") + """">
                     <td>""" + str(IDToTotalRank[x]))
         if x in lastMonth:
-            change = lastMonth[x][0] - IDToTotalRank[x]
+            change = lastMonth[x][2] - IDToTotalRank[x]
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
@@ -1109,9 +1109,9 @@ def hundrethPlay(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000)
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
-                file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_up">(+""" + "{:2f}".format(change) + ")</span>")
             if change < 0:
-                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_down">(""" + "{:2f}".format(change) + ")</span>")
         file.write("""</td>
                     <td>{:.2f}""".format(IDToConvertScore[x]))
         if x in lastMonth:
@@ -1119,13 +1119,13 @@ def hundrethPlay(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000)
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
-                file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_up">(+""" + "{:2f}".format(change) + ")</span>")
             if change < 0:
-                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_down">(""" + "{:2f}".format(change) + ")</span>")
         file.write("""</td>
                     <td>""" + str(IDToConvertRank[x]))
         if x in lastMonth:
-            change = lastMonth[x][2] - IDToConvertRank[x]
+            change = lastMonth[x][0] - IDToConvertRank[x]
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
