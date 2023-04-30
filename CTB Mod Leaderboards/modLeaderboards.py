@@ -1080,7 +1080,7 @@ def hundrethPlay(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000)
                     <th data-lockedorder="asc" class="text-left">#</th>
                     <th data-sorter="false" id="user_name_head">Name</th>
                     <th data-lockedorder="desc">100th play</th>
-                    <th data-lockedorder="desc">100th convert</th>
+                    <th data-sorter="false">100th convert</th>
                     <th data-lockedorder="asc" class="text-left">#</th>
                   </tr>
                 </thead>
@@ -1205,6 +1205,200 @@ def hundrethPlay(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000)
     pickle.dump(IDToStoredData, file)
     file.close()
 
+def totalPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000):
+    mapCount = 0
+    for (_,y) in IDToBeatmap.items():
+        if y.mode & 2 == 0:
+            if y.status == 1:
+                mapCount += 1
+    IDToScore = {}
+    for (x,y) in userIDToPlays.items():
+        userpassed = set()
+        for z in y:
+            if z.modCode & 1 == 0:
+                if IDToBeatmap[z.beatmapID].status == 1:
+                    userpassed.add(z.beatmapID)
+        IDToScore[x] = userpassed.__len__()
+    sortedScores = sorted(IDToScore.items(), key=lambda item: item[1], reverse=True)
+    filteredCountrySet = set()
+    for x in sortedScores[:count]:
+        filteredCountrySet.add(IDToUser[x[0]].country)
+    filteredCountryList = sorted(filteredCountrySet, key=lambda item: countryCodes[item])
+    IDToStoredData = {}
+    lastMonth = []
+    try:
+        file = open("last month/previousPasses.pkl", "rb")
+        lastMonth = pickle.load(file)
+        file.close()
+    except:
+        lastMonth = []
+    file = open("html/passes.html", "w", encoding="utf-8")
+    file.write("""<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
+    <link rel="stylesheet" href="../../style.css">
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../Mottie-tablesorter/js/jquery.tablesorter.js"></script>
+        <script>
+        $(function(){
+            $('table').tablesorter({
+                usNumberFormat : false,
+                sortReset      : true,
+                sortRestart    : true
+            });
+        });
+        </script>
+        <title>Total Passes</title>
+      </head>
+      <body>
+        <div class="content">
+    <p><a href="index.html">Return to main page</a></p>
+    <br>
+    <p>Ranking based on total passes (out of """ + str(mapCount) + """ ranked maps)</p>
+    <p>Data taken from top 10,000 players.</p>
+    <p>Doesn't include Loved maps.</p>
+    <p>Using 1st April 2023 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    <p>EZ/HT are allowed. NF is not allowed.</p>
+    <div class="search_field">
+      <input id="user_search_text" type="text" placeholder="Search by username...">
+      <input id="user_search_button" type="button" value="search">
+      <span>(Case-insensitive)</span>
+    </div>
+    <div class="search_field">
+      <label for="country_ranking">Filter by country:</label>
+      <select id="country_ranking">
+        <option value="all" selected>All country</option>
+    """)
+    for x in filteredCountryList:
+        file.write("""    <option value=\"""" + countryCodes[x].replace(" ", "_") + """">""" + countryCodes[x] + """</option>
+    """)
+    file.write("""  </select>
+</div>
+<div class="search_field">
+  <input id="reset" type="button" value="Clear search result">
+</div>
+<div id="ranking-wrapper">
+  <table table class="tablesorter">
+    <thead>
+      <tr>
+        <th data-lockedorder="asc" class="text-left">#</th>
+        <th data-sorter="false" id="user_name_head">Name</th>
+        <th data-lockedorder="desc">Passes</th>      </tr>
+                   </thead>
+                   <tbody>
+               """)
+    rank = 1
+    for x in sortedScores[:count]:
+        file.write("""      <tr class=\"""" + countryCodes[IDToUser[x[0]].country].replace(" ", "_") + """">
+        <td>""" + str(rank))
+        if x[0] in lastMonth:
+            change = lastMonth[x[0]][0] - rank
+            if change == 0:
+                file.write(""" <span class="rank_no_change">(→)</span>""")
+            if change > 0:
+                file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+            if change < 0:
+                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+        else:
+            file.write(""" <span class="rank_new">(New)</span>""")
+        file.write("""</td>
+        <td class="user_name">
+          """ + IDToUser[x[0]].name + """
+        </td>
+        <td>""" + str(x[1]))
+        if x[0] in lastMonth:
+            change = x[1] - lastMonth[x[0]][1]
+            if change == 0:
+                file.write(""" <span class="rank_no_change">(+0)</span>""")
+            if change < 0:
+                file.write(""" <span class="rank_down">(""" + "{:.2f}".format(change) + ")</span>")
+            if change > 0:
+                if change < 50:
+                    file.write(""" <span class="pp_50">(+""" + "{:.2f}".format(change) + ")</span>")
+                else:
+                    if change < 100:
+                        file.write(""" <span class="pp_100">(+""" + "{:.2f}".format(change) + ")</span>")
+                    else:
+                        if change < 200:
+                            file.write(""" <span class="rank_new">(+""" + "{:.2f}".format(change) + ")</span>")
+                        else:
+                            file.write(""" <span class="rank_up">(+""" + "{:.2f}".format(change) + ")</span>")
+        file.write("""</td>
+      </tr>""")
+        IDToStoredData[x[0]] = (rank, x[1])
+        rank += 1
+    file.write("""    </tbody>
+  </table>
+</div>
+  </div>
+  </body>
+<script>
+  "use strict";
+  window.addEventListener('pageshow', () => {
+    $("#country_ranking").val("all");
+    $("#user_search_text").val("");
+  });
+  $(() => {
+    const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\\\]/g, '\\\\$&');
+    const resetTable = () => $("tr").removeClass('hide');
+    let isNameFiltered = false;
+    let isCountryFiltered = false;
+    $("#user_search_button").on("click", () => {
+      if(isNameFiltered) {
+        resetTable();
+      }
+      const search_text = $("#user_search_text").val();
+      $(".user_name a").each((_, e) => {
+        const user_elem = $(e);
+        const user_parent = user_elem.closest("tr");
+        const val = user_elem.text().toUpperCase();
+        if (val.match(escapeRegExp(search_text.toUpperCase()))) {
+          user_parent.removeClass('hide');
+        } else {
+          user_parent.addClass('hide');
+        }
+      });
+      isNameFiltered = true;
+    });
+
+    $("#reset").on("click", () => {
+      resetTable();
+      $("#country_ranking").val("all");
+      $("#user_search_text").val("");
+    });
+
+    $("#country_ranking").on("change", () => {
+      if (isCountryFiltered) {
+        resetTable();
+      }
+      const selected_country = $("#country_ranking").val();
+      if (selected_country === "all") {
+        resetTable();
+      } else {
+        $("tbody tr").each((_, e) => {
+          const user_row = $(e);
+          if (user_row.attr("class") === selected_country) {
+            user_row.removeClass('hide');
+          } else {
+            user_row.addClass('hide');
+          }
+        });
+        isCountryFiltered = true;
+      }
+    });
+  });
+</script>
+</html>""")
+    file.close()
+    file = open("this month/previousPasses.pkl", "wb")
+    pickle.dump(IDToStoredData, file)
+    file.close()
 
 if __name__ == "__main__":
     file = open("userIDToLovedPlays.pkl", "rb")
@@ -1232,4 +1426,4 @@ if __name__ == "__main__":
     #         if IDToBeatmap[y.beatmapID].mode == 0:
     #             convertsOnly.append(y)
     #     userIDToConvertPlays[x] = convertsOnly
-    hundrethPlay(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap)
+    totalPasses(userIDToRankedPlays, IDToUser, IDToBeatmap, IDToBeatmapSet, countryCodes)
