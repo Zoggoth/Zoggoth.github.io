@@ -3,6 +3,7 @@ import pickle
 
 oneMonthAgo = tools.oneMonthAgo
 oneYearAgo = tools.oneYearAgo
+date = "1st May 2023"
 
 def playFilter(playList, includeMods=0, excludeMods=0):
     mapSet = set()
@@ -293,7 +294,7 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
 """ +
 ("""<p>There is a separate leaderboard that bans the """ + str(len(banSet)) + """ most overweighted maps. Click the top of the table to sort.</p>
 """ if hasBanList else "")
-+ """<p>Using 1st April 2023 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
++ """<p>Using """+date+""" data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
 <p><a href=\""""+name+"""/all.html">Top 200 plays overall</a></p>
 <p><a href=\""""+name+"""/farm.html">Top 1000 farm maps</a></p>
 <div class="search_field">
@@ -564,7 +565,7 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
     <p>I arbitrarily chose 3.5* as the cutoff.</p>
     <p> It's approximately the border between Platter & Rain, and includes <a href="http://osu.ppy.sh/b/283299">several</a> <a href="http://osu.ppy.sh/b/369758">maps</a> <a href="https://osu.ppy.sh/b/2905286">that I</a> <a href="http://osu.ppy.sh/b/177970">found</a> <a href="https://osu.ppy.sh/b/2385749">difficult</a>.</p>
     <p><a href="rarestFCs.html">Rarest FCs</a></p>
-    <p>Using 1st April 2023 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    <p>Using """+date+""" data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
       <input id="user_search_button" type="button" value="search">
@@ -826,7 +827,7 @@ def number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes, co
     <p>Ranking based on total number of first places</p>
     <p>If 2 people have the same score, they both get first (normally goes to whoever set the score first)</p>
     <p>Data taken from top 10,000 players.</p>
-    <p>Using 1st April 2023 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    <p>Using """+date+""" data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
       <input id="user_search_button" type="button" value="search">
@@ -1054,7 +1055,7 @@ def hundrethPlay(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000)
         <p>Ranking based on users 100th best play & 100th best convert</p>
         <p>Doesn't include Loved maps.</p>
         <p>Data taken from top 10,000 players.</p>
-        <p>Using 1st April 2023 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+        <p>Using """+date+""" data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
         <div class="search_field">
           <input id="user_search_text" type="text" placeholder="Search by username...">
           <input id="user_search_button" type="button" value="search">
@@ -1263,7 +1264,7 @@ def totalPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000):
     <p>Ranking based on total passes (out of """ + str(mapCount) + """ ranked maps)</p>
     <p>Data taken from top 10,000 players.</p>
     <p>Doesn't include Loved maps.</p>
-    <p>Using 1st April 2023 data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    <p>Using """+date+""" data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
     <p>EZ/HT are allowed. NF is not allowed.</p>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
@@ -1317,18 +1318,18 @@ def totalPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000):
             if change == 0:
                 file.write(""" <span class="rank_no_change">(+0)</span>""")
             if change < 0:
-                file.write(""" <span class="rank_down">(""" + "{:.2f}".format(change) + ")</span>")
+                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
             if change > 0:
                 if change < 50:
-                    file.write(""" <span class="pp_50">(+""" + "{:.2f}".format(change) + ")</span>")
+                    file.write(""" <span class="pp_50">(+""" + str(change) + ")</span>")
                 else:
                     if change < 100:
-                        file.write(""" <span class="pp_100">(+""" + "{:.2f}".format(change) + ")</span>")
+                        file.write(""" <span class="pp_100">(+""" + str(change) + ")</span>")
                     else:
                         if change < 200:
-                            file.write(""" <span class="rank_new">(+""" + "{:.2f}".format(change) + ")</span>")
+                            file.write(""" <span class="rank_new">(+""" + str(change) + ")</span>")
                         else:
-                            file.write(""" <span class="rank_up">(+""" + "{:.2f}".format(change) + ")</span>")
+                            file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
         file.write("""</td>
       </tr>""")
         IDToStoredData[x[0]] = (rank, x[1])
@@ -1419,11 +1420,11 @@ if __name__ == "__main__":
     file = open("IDToBeatmapSet.pkl", "rb")
     IDToBeatmapSet = pickle.load(file)
     file.close()
-    # userIDToConvertPlays = {}
+    userIDToConvertPlays = {}
+    totalPasses(userIDToRankedPlays, IDToUser, IDToBeatmap, countryCodes)
     # for x in userIDToRankedPlays:
     #     convertsOnly = []
     #     for y in userIDToRankedPlays[x]:
     #         if IDToBeatmap[y.beatmapID].mode == 0:
     #             convertsOnly.append(y)
     #     userIDToConvertPlays[x] = convertsOnly
-    totalPasses(userIDToRankedPlays, IDToUser, IDToBeatmap, IDToBeatmapSet, countryCodes)
