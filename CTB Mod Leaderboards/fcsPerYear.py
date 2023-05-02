@@ -88,30 +88,16 @@ file.write("""<!DOCTYPE html>
 """)
 for x in perYearList:
     file.write("""      <tr""")
-    if IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].date >= oneMonthAgo: #
+    if IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].date >= oneMonthAgo:
         file.write(""" class="recent\"""")
     file.write(""">
-        <td><a href="https://osu.ppy.sh/b/""")
-    file.write(str(x[0]))
-    file.write("""?m=2" target="_blank">""")
-    file.write(IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].title+" ["+IDToBeatmap[x[0]].difficultyName)
-    file.write("""]</a> </td>
-        <td>""")
-    file.write(str(x[3]))
-    file.write("""</td>
-        <td>""")
-    file.write("{:.2f}".format(x[2]))
-    file.write("""</td>
-        <td>""")
-    file.write("{:.2f}".format(x[1]))
-    file.write("""</td>
-        <td>""")
-    file.write("{:.2f}".format(IDToBeatmap[x[0]].difficulty[0]))
-    file.write("""</td>
-        <td>""")
-    file.write("{:.2f}".format(tools.catchPP(IDToBeatmap[x[0]].difficulty[0],IDToBeatmap[x[0]].maxCombo,IDToBeatmap[x[0]].maxCombo,0,tools.modifiedAR(IDToBeatmap[x[0]].AR,0),0,1)))
-    file.write("""</td>
-      </tr>""")
+        <td><a href="https://osu.ppy.sh/b/{}?m=2" target="_blank">{} [{}]</a> </td>
+        <td>{}</td>
+        <td>{:.2f}</td>
+        <td>{:.2f}</td>
+        <td>{:.2f}</td>
+        <td>{:.2f}</td>
+      </tr>""".format(x[0], IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].title, IDToBeatmap[x[0]].difficultyName, x[3], x[2], x[1], IDToBeatmap[x[0]].difficulty[0], tools.catchPP(IDToBeatmap[x[0]].difficulty[0],IDToBeatmap[x[0]].maxCombo,IDToBeatmap[x[0]].maxCombo,0,tools.modifiedAR(IDToBeatmap[x[0]].AR,0),0,1)))
 file.write("""
     </tbody>
   </table>
@@ -121,6 +107,9 @@ file.write("""
 </html>""")
 file.close()
 # Would technically be faster to do above, but it just looks like a mess
+# This code splits the rarest FC list into "Done" & "To Do" for a particular user
+# Since I send this to the user in question (rather than host it), it needs to contain the tablesorting code
+# It uses tabs instead of spaces, resulting in 3600 errors, but I don't want to break it, so I'll leave it as is
 file = open("IDToUser.pkl", "rb")
 IDToUser = pickle.load(file)
 file.close()

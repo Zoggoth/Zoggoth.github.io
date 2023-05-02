@@ -1,7 +1,7 @@
 import math
 import datetime
 
-oneMonthAgo = 1680270124
+oneMonthAgo = 1680270124 # 1682857616
 oneYearAgo = 1651359600
 
 
@@ -11,10 +11,10 @@ class beatmapSet:
     title = ""  # ""
     date = datetime.datetime(1970, 1, 1)
 
-    def debugPrint(self):
-        print(str(self.ID) + " " + self.artist + " " + self.title)
+    def __repr__(self):
+        return str(self.ID) + " " + self.artist + " " + self.title
     # Beatmap sets also have a user_id & a status, but in general they can be overriden with the beatmap ones
-    # The .sql file has a lot of raw binary, so it may be geruinely tricky to pick up anything after that
+    # The .sql file has a lot of raw binary, so it may be genuinely tricky to pick up anything after that
 
 
 class beatmap:

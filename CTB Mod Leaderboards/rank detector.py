@@ -49,7 +49,7 @@ for x in topScoreList:
         exit()
     if x[1].rank[0] != currentrank:
         currentrank = x[1].rank[0]
-        print(currentrank + " ranks")
+        print(currentrank + "{} ranks")
         if currentrank == "S":
             if x[1].misses:
                 print("With misses")

@@ -5,6 +5,7 @@ oneMonthAgo = tools.oneMonthAgo
 oneYearAgo = tools.oneYearAgo
 date = "1st May 2023"
 
+
 def playFilter(playList, includeMods=0, excludeMods=0):
     mapSet = set()
     output = []
@@ -27,7 +28,7 @@ def ppCalculate(playList, count=100):
 
 
 def printFarmMaps(farmMaps, IDAndModToPPAndScore, IDToBeatmap, IDToBeatmapSet, name, count=1000):
-    file = open("html/"+name+"/farm.html", "w")
+    file = open("html/{}/farm.html".format(name), "w")
     file.write("""<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -41,21 +42,21 @@ def printFarmMaps(farmMaps, IDAndModToPPAndScore, IDToBeatmap, IDToBeatmapSet, n
       crossorigin="anonymous"></script>
     <script type="text/javascript" src="../../../Mottie-tablesorter/js/jquery.tablesorter.js"></script>
     <script>
-    $(function(){
-        $('table').tablesorter({
+    $(function(){{
+        $('table').tablesorter({{
             usNumberFormat : false,
             sortReset      : true,
             sortRestart    : true
-        });
-    });
+        }});
+    }});
     </script>
-    <title>"""+name+""" Farm Maps</title>
+    <title>{} Farm Maps</title>
   </head>
   <body>
     <div class="content">
-<p><a href="../"""+name+""".html">Return to leaderboard</a></p>
+<p><a href="../{}.html">Return to leaderboard</a></p>
 <br>
-<p><b>"""+name+""" Farm Maps (Click on PP or Farm Score to sort)</b></p>    
+<p><b>{} Farm Maps (Click on PP or Farm Score to sort)</b></p>    
 <div class="bp-wrapper">
   <table class="bp">
     <thead>
@@ -68,18 +69,18 @@ def printFarmMaps(farmMaps, IDAndModToPPAndScore, IDToBeatmap, IDToBeatmapSet, n
       </tr>
     </thead>
     <tbody>
-""")
+""".format(name, name, name))
     rank = 0
     for x in farmMaps[:count]:
         rank += 1
         file.write("""	  <tr >
-        <td>"""+str(rank)+"""</td>
-        <td><a href="https://osu.ppy.sh/b/"""+str(x[0])+"""?m=2" target="_blank">"""+IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].title+" ["+IDToBeatmap[x[0]].difficultyName+"""]</a> </td>
-        <td>"""+tools.modCodeToText(x[1])+"""</td>
-        <td><b>"""+"{:.2f}".format(IDAndModToPPAndScore[x][0])+"""pp</b></td>
-        <td>"""+"{:.2f}".format(IDAndModToPPAndScore[x][1])+"""</td>
+        <td>{}</td>
+        <td><a href="https://osu.ppy.sh/b/{}?m=2" target="_blank">{} [{}]</a> </td>
+        <td>{}</td>
+        <td><b>{:.2f}pp</b></td>
+        <td>{:.2f}</td>
       </tr>
-""")
+""".format(rank, x[0], IDToBeatmapSet[IDToBeatmap[x[0]].beatmapSetID].title, IDToBeatmap[x[0]].difficultyName, tools.modCodeToText(x[1]), IDAndModToPPAndScore[x][0], IDAndModToPPAndScore[x][1]))
     file.write("""    </tbody>
   </table>
 </div>
@@ -104,11 +105,11 @@ def printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, user=0, count
                 beatmapIDtoDate[x.beatmapID] = x.date
     plays = playFilter(plays)
     pp = ppCalculate(plays, count)
-    filename = "html/" + name + "/"
+    filename = "html/{}/".format(name)
     if multiuser:
         filename += "all.html"
     else:
-        filename += str(user) + ".html"
+        filename += "{}.html".format(user)
     file = open(filename, "w")
     username = "Everyone" if multiuser else IDToUser[user].name
     file.write("""<!DOCTYPE html>
@@ -118,13 +119,13 @@ def printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, user=0, count
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
 <link rel="stylesheet" href="../../../style.css">
-    <title>""" + username +"'s " + name + """ plays</title>
+    <title>{}'s {} plays</title>
   </head>
   <body>
     <div class="content">
-<p><a href="../""" + ("index" if name == "Total" else name) + """.html">Return to leaderboard</a></p>
+<p><a href="../{}.html">Return to leaderboard</a></p>
 <br>
-<p><b>""" + username + " (" + "{:.2f}".format(pp) + """ pp)</b></p>
+<p><b>{} ({:.2f} pp)</b></p>
 <div class="bp-wrapper">
   <table class="bp">
     <thead>
@@ -135,7 +136,7 @@ def printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, user=0, count
         <th>Miss</th>
         <th>Combo</th>
         <th>PP</th>
-""")
+""".format(username, name, ("index" if name == "Total" else name), username, pp))
     if multiuser:
         file.write("""<th>Player</th>
 """)
@@ -147,15 +148,15 @@ def printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, user=0, count
         file.write("""
         <tr""")
         if multiuser:
-            if beatmapIDtoDate[x.beatmapID] >= oneMonthAgo: #
+            if beatmapIDtoDate[x.beatmapID] >= oneMonthAgo:
                 file.write(""" class="recent\"""")
         else:
-            if x.date >= oneMonthAgo: #
+            if x.date >= oneMonthAgo:
                 file.write(""" class="recent\"""")
         file.write(""">
-        <td>"""+str(rank)+"""</td>
-        <td><a href="https://osu.ppy.sh/b/"""+str(x.beatmapID)+"""?m=2" target="_blank">"""+IDToBeatmapSet[IDToBeatmap[x.beatmapID].beatmapSetID].title+" ["+IDToBeatmap[x.beatmapID].difficultyName+"""]</a> </td>
-        <td>""")
+        <td>{}</td>
+        <td><a href="https://osu.ppy.sh/b/{}?m=2" target="_blank">{} [{}]</a> </td>
+        <td>""".format(rank, x.beatmapID, IDToBeatmapSet[IDToBeatmap[x.beatmapID].beatmapSetID].title, IDToBeatmap[x.beatmapID].difficultyName))
         if multiuser:
             if len(beatmapIDtoUserList[x.beatmapID]) > 1:
                 file.write(tools.modCodeToText((x.modCode & 1370)))
@@ -164,18 +165,18 @@ def printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, user=0, count
         else:
             file.write(tools.modCodeToText(x.modCode))
         file.write("""</td>
-        <td>"""+str(x.misses)+"""</td>
-        <td>"""+str(x.combo)+"/"+str(IDToBeatmap[x.beatmapID].maxCombo)+"""x</td>
-        <td><b>"""+"{:.2f}".format(x.pp)+"""pp</b></td>""")
+        <td>{}</td>
+        <td>{}/{}x</td>
+        <td><b>{:.2f}pp</b></td>""".format(x.misses, x.combo, IDToBeatmap[x.beatmapID].maxCombo, x.pp))
         if multiuser:
             if len(beatmapIDtoUserList[x.beatmapID])>5:
                 usernameList = "Several People"
             else:
                 usernameList = ""
                 for y in beatmapIDtoUserList[x.beatmapID]:
-                    usernameList += IDToUser[y].name + " & "
+                    usernameList += "{} & ".format(IDToUser[y].name)
                 usernameList = usernameList[:-3]
-            file.write("<td>"+usernameList+"</td>")
+            file.write("<td>{}</td>".format(usernameList))
         file.write("""
       </tr>""")
         rank += 1
@@ -245,16 +246,16 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
     if hasBanList:
         banListString = "<p>Banlist</p>"
         for x in banSet:
-            banListString += """\n<p><a href="https://osu.ppy.sh/b/"""+str(x)+"""?m=2" target="_blank">"""+IDToBeatmapSet[IDToBeatmap[x].beatmapSetID].title+" ["+IDToBeatmap[x].difficultyName+"""]</a></p>"""
+            banListString += """\n<p><a href="https://osu.ppy.sh/b/{}?m=2" target="_blank">{} [{}]</a></p>""".format(x, IDToBeatmapSet[IDToBeatmap[x].beatmapSetID].title, IDToBeatmap[x].difficultyName)
     IDToStoredData = {}
     lastMonth = []
     try:
-        file = open("last month/previous"+name+".pkl", "rb")
+        file = open("last month/previous{}.pkl".format(name), "rb")
         lastMonth = pickle.load(file)
         file.close()
     except:
         lastMonth = []
-    file = open("html/"+name+".html", "w", encoding="utf-8")
+    file = open("html/{}.html".format(name), "w", encoding="utf-8")
     file.write("""<!DOCTYPE html>
 <html lang="en">
   <head>
@@ -268,35 +269,36 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
   crossorigin="anonymous"></script>
     <script type="text/javascript" src="../../Mottie-tablesorter/js/jquery.tablesorter.js"></script>
     <script>
-    $(function(){
-        $('table').tablesorter({
+    $(function(){{
+        $('table').tablesorter({{
             usNumberFormat : false,
             sortReset      : true,
             sortRestart    : true
-        });
-    });
+        }});
+    }});
     </script>
-    <title>"""+name+""" pp ranking</title>
+    <title>{} pp ranking</title>
   </head>
   <body>
     <div class="content">
 <p><a href="index.html">Return to main page</a></p>
 <br>
-<p>Osu!catch pp from """+name+""" plays.</p>
+<p>Osu!catch pp from {} plays.</p>
 <p>Data taken from top 10,000 players.</p>
 <p>Doesn't include bonus pp.</p>
-""")
+""".format(name, name))
     if name != "Loved":
         file.write("""<p>Doesn't include Loved maps.</p>
         """)
     file.write("""<p>If player has multiple scores on the same map, only the highest pp play is used for calculation.</p>
 <p>Click someone's name to see their top ranks.</p>
-""" +
-("""<p>There is a separate leaderboard that bans the """ + str(len(banSet)) + """ most overweighted maps. Click the top of the table to sort.</p>
-""" if hasBanList else "")
-+ """<p>Using """+date+""" data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
-<p><a href=\""""+name+"""/all.html">Top 200 plays overall</a></p>
-<p><a href=\""""+name+"""/farm.html">Top 1000 farm maps</a></p>
+""")
+    if hasBanList:
+        file.write("""<p>There is a separate leaderboard that bans the {} most overweighted maps. Click the top of the table to sort.</p>
+""".format(len(banSet)))
+    file.write("""<p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+<p><a href="{}/all.html">Top 200 plays overall</a></p>
+<p><a href="{}/farm.html">Top 1000 farm maps</a></p>
 <div class="search_field">
   <input id="user_search_text" type="text" placeholder="Search by username...">
   <input id="user_search_button" type="button" value="search">
@@ -306,10 +308,10 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
   <label for="country_ranking">Filter by country:</label>
   <select id="country_ranking">
     <option value="all" selected>All country</option>
-""")
+""".format(date, name, name))
     for x in filteredCountryList:
-        file.write("""    <option value=\""""+countryCodes[x].replace(" ", "_")+"""">"""+countryCodes[x]+"""</option>
-""")
+        file.write("""    <option value="{}">{}</option>
+""".format(countryCodes[x].replace(" ", "_"), countryCodes[x]))
     file.write("""  </select>
 </div>
 <div class="search_field">
@@ -321,79 +323,81 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
       <tr>
         <th data-lockedorder="asc" class="text-left">#</th>
         <th data-sorter="false" id="user_name_head">Name</th>
-        <th data-lockedorder="desc">PP</th>""" + ("""
+        <th data-lockedorder="desc">PP</th>""")
+    if hasBanList:
+        file.write("""
         <th data-lockedorder="desc">Filtered<br>PP</th>
-        <th data-lockedorder="asc" class="text-left">#</th>""" if hasBanList else "") +
-"""      </tr>
+        <th data-lockedorder="asc" class="text-left">#</th>""")
+    file.write("""      </tr>
     </thead>
     <tbody>
 """)
     rank = 1
     for x in IDToPP[:count]:
-        file.write("""      <tr class=\""""+countryCodes[IDToUser[x[0]].country].replace(" ", "_")+"""">
-        <td>"""+str(rank))
+        file.write("""      <tr class="{}">
+        <td>{}""".format(countryCodes[IDToUser[x[0]].country].replace(" ", "_"), rank))
         if x[0] in lastMonth:
             change = lastMonth[x[0]][0] - rank
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
-                file.write(""" <span class="rank_up">(+"""+str(change)+")</span>")
+                file.write(""" <span class="rank_up">(+{})</span>""".format(change))
             if change < 0:
-                file.write(""" <span class="rank_down">("""+str(change)+")</span>")
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
         else:
             file.write(""" <span class="rank_new">(New)</span>""")
         file.write("""</td>
         <td class="user_name">
-          <a href=\""""+name+"/"+str(x[0])+""".html">"""+IDToUser[x[0]].name+"""</a>
+          <a href="{}/{}.html">{}</a>
         </td>
-        <td>"""+"{:.2f}".format(x[1]))
+        <td>{:.2f}""".format(name, x[0], IDToUser[x[0]].name, x[1]))
         if x[0] in lastMonth:
             change = x[1] - lastMonth[x[0]][1]
             if change == 0:
                 file.write(""" <span class="rank_no_change">(+0)</span>""")
             if change < 0:
-                file.write(""" <span class="rank_down">("""+"{:.2f}".format(change)+")</span>")
+                file.write(""" <span class="rank_down">({:.2f})</span>""".format(change))
             if change > 0:
                 if change < 50:
-                    file.write(""" <span class="pp_50">(+"""+"{:.2f}".format(change)+")</span>")
+                    file.write(""" <span class="pp_50">(+{:.2f})</span>""".format(change))
                 else:
                     if change < 100:
-                        file.write(""" <span class="pp_100">(+""" + "{:.2f}".format(change) + ")</span>")
+                        file.write(""" <span class="pp_100">(+{:.2f})</span>""".format(change))
                     else:
                         if change < 200:
-                            file.write(""" <span class="rank_new">(+""" + "{:.2f}".format(change) + ")</span>")
+                            file.write(""" <span class="rank_new">(+{:.2f})</span>""".format(change))
                         else:
-                            file.write(""" <span class="rank_up">(+""" + "{:.2f}".format(change) + ")</span>")
+                            file.write(""" <span class="rank_up">(+{:.2f})</span>""".format(change))
         if hasBanList:
             file.write("""</td>
-        <td>"""+"{:.2f}".format(IDToBannedPP[x[0]]))
+        <td>{:.2f}""".format(IDToBannedPP[x[0]]))
             if x[0] in lastMonth:
                 change = IDToBannedPP[x[0]] - lastMonth[x[0]][3]
                 if change == 0:
                     file.write(""" <span class="rank_no_change">(+0)</span>""")
                 if change < 0:
-                    file.write(""" <span class="rank_down">("""+"{:.2f}".format(change)+")</span>")
+                    file.write(""" <span class="rank_down">({:.2f})</span>""".format(change))
                 if change > 0:
                     if change < 50:
-                        file.write(""" <span class="pp_50">(+"""+"{:.2f}".format(change)+")</span>")
+                        file.write(""" <span class="pp_50">(+{:.2f})</span>""".format(change))
                     else:
                         if change < 100:
-                            file.write(""" <span class="pp_100">(+""" + "{:.2f}".format(change) + ")</span>")
+                            file.write(""" <span class="pp_100">(+{:.2f})</span>""".format(change))
                         else:
                             if change < 200:
-                                file.write(""" <span class="rank_new">(+""" + "{:.2f}".format(change) + ")</span>")
+                                file.write(""" <span class="rank_new">(+{:.2f})</span>""".format(change))
                             else:
-                                file.write(""" <span class="rank_up">(+""" + "{:.2f}".format(change) + ")</span>")
+                                file.write(""" <span class="rank_up">(+{:.2f})</span>""".format(change))
             file.write("""</td>
-        <td>"""+str(banRanked[x[0]]))
+        <td>{}""".format(banRanked[x[0]]))
             if x[0] in lastMonth:
                 change = lastMonth[x[0]][2] - banRanked[x[0]]
                 if change == 0:
                     file.write(""" <span class="rank_no_change">(→)</span>""")
                 if change > 0:
-                    file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+                    file.write(""" <span class="rank_up">(+{})</span>""".format(change))
                 if change < 0:
-                    file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+                    file.write(""" <span class="rank_down">({})</span>""".format(change))
             else:
                 file.write(""" <span class="rank_new">(New)</span>""")
         file.write("""</td>
@@ -466,13 +470,12 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
 </script>
 </html>""")
     file.close()
-    file = open("this month/previous"+name+".pkl", "wb")
+    file = open("this month/previous{}.pkl".format(name), "wb")
     pickle.dump(IDToStoredData, file)
     file.close()
 
 
-def YMDvsTheWorld(YMDID, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDToBeatmapSet, includeMods=0, excludeMods=0, count=200):
-    IDToPP = []
+def YMDvsTheWorld(YMDID, userIDToPlays, IDToUser, IDToBeatmap, IDToBeatmapSet, includeMods=0, excludeMods=0, count=200):
     allPlays = []
     for x in userIDToPlays:
         if x == YMDID:
@@ -540,13 +543,13 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
       crossorigin="anonymous"></script>
     <script type="text/javascript" src="../../Mottie-tablesorter/js/jquery.tablesorter.js"></script>
     <script>
-    $(function(){
-        $('table').tablesorter({
+    $(function(){{
+        $('table').tablesorter({{
             usNumberFormat : false,
             sortReset      : true,
             sortRestart    : true
-        });
-    });
+        }});
+    }});
     </script>
         <title>
     Ranked Specific FCs ranking</title>
@@ -565,7 +568,7 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
     <p>I arbitrarily chose 3.5* as the cutoff.</p>
     <p> It's approximately the border between Platter & Rain, and includes <a href="http://osu.ppy.sh/b/283299">several</a> <a href="http://osu.ppy.sh/b/369758">maps</a> <a href="https://osu.ppy.sh/b/2905286">that I</a> <a href="http://osu.ppy.sh/b/177970">found</a> <a href="https://osu.ppy.sh/b/2385749">difficult</a>.</p>
     <p><a href="rarestFCs.html">Rarest FCs</a></p>
-    <p>Using """+date+""" data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
       <input id="user_search_button" type="button" value="search">
@@ -575,10 +578,10 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
       <label for="country_ranking">Filter by country:</label>
       <select id="country_ranking">
         <option value="all" selected>All country</option>
-    """)
+    """.format(date))
     for x in filteredCountryList:
-        file.write("""    <option value=\"""" + countryCodes[x].replace(" ", "_") + """">""" + countryCodes[x] + """</option>
-    """)
+        file.write("""    <option value="{}">{}</option>
+    """.format(countryCodes[x].replace(" ", "_"), countryCodes[x]))
     file.write("""  </select>
     </div>
     <div class="search_field">
@@ -590,62 +593,62 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
           <tr>
             <th data-lockedorder="asc" class="text-left">#</th>
             <th data-sorter="false" id="user_name_head">Name</th>
-            <th data-lockedorder="desc">Total FCs<br>(out of """+str(len(allSet))+""")</th>
-            <th data-lockedorder="desc">Rain+ FCs<br>(out of """+str(len(rainSet))+""")</th>
+            <th data-lockedorder="desc">Total FCs<br>(out of {})</th>
+            <th data-lockedorder="desc">Rain+ FCs<br>(out of {})</th>
             <th data-lockedorder="asc" class="text-left">#</th>
           </tr>
         </thead>
         <tbody>
-    """)
+    """.format(len(allSet), len(rainSet)))
     rank = 1
     for x in userScores[:count]:
-        file.write("""      <tr class=\"""" + countryCodes[IDToUser[x[0]].country].replace(" ", "_") + """">
-            <td>""" + str(rank))
+        file.write("""      <tr class="{}">
+            <td>{}""".format(countryCodes[IDToUser[x[0]].country].replace(" ", "_"),rank))
         if x[0] in lastMonth:
             change = lastMonth[x[0]][0] - rank
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
-                file.write(""" <span class="rank_up">(+"""+str(change)+")</span>")
+                file.write(""" <span class="rank_up">(+{})</span>""".format(change))
             if change < 0:
-                file.write(""" <span class="rank_down">("""+str(change)+")</span>")
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
         else:
             file.write(""" <span class="rank_new">(New)</span>""")
         file.write("""</td>
             <td class="user_name">
-              <a>""" + IDToUser[x[0]].name + """</a>
+              <a>{}</a>
             </td>
-            <td>""" + str(x[1]) + " ("+"{:.2f}".format(100*x[1]/len(allSet))+"%)")
+            <td>{} ({:.2f}%)""".format(IDToUser[x[0]].name, x[1], 100*x[1]/len(allSet)))
         if x[0] in lastMonth:
             change = x[1]/len(allSet) - lastMonth[x[0]][1]
             if change >= 0:
                 if change >= 0.0095:
-                    file.write(""" <span class="rank_up">(+"""+"{:.1f}".format(100*change)+"%)</span>")
+                    file.write(""" <span class="rank_up">(+{:.1f}%)</span>""".format(100*change))
                 else:
-                    file.write(""" <span class="pp_100">(+""" + "{:.1f}".format(100 * change) + "%)</span>")
+                    file.write(""" <span class="pp_100">(+{:.1f}%)</span>""".format(100*change))
             else:
-                file.write(""" <span class="rank_down">("""+"{:.1f}".format(100*change)+"%)</span>")
+                file.write(""" <span class="rank_down">({:.1f}%)</span>""".format(100*change))
         file.write("""</td>
-            <td>""" + str(x[2]) + " ("+"{:.2f}".format(100*x[2]/len(rainSet))+"%)")
+            <td>{} ({:.2f}%)""".format(x[2], 100*x[2]/len(rainSet)))
         if x[0] in lastMonth:
             change = x[2]/len(rainSet) - lastMonth[x[0]][3]
             if change >= 0:
                 if change >= 0.0095:
-                    file.write(""" <span class="rank_up">(+"""+"{:.1f}".format(100*change)+"%)</span>")
+                    file.write(""" <span class="rank_up">(+{:.1f}%)</span>""".format(100*change))
                 else:
-                    file.write(""" <span class="pp_100">(+""" + "{:.1f}".format(100 * change) + "%)</span>")
+                    file.write(""" <span class="pp_100">(+{:.1f}%)</span>""".format(100*change))
             else:
-                file.write(""" <span class="rank_down">("""+"{:.1f}".format(100*change)+"%)</span>")
+                file.write(""" <span class="rank_down">({:.1f}%)</span>""".format(100*change))
         file.write("""</td>
-            <td>""" + str(IDtoRainRank[x[0]]))
+            <td>{}""".format(IDtoRainRank[x[0]]))
         if x[0] in lastMonth:
             change = lastMonth[x[0]][2] - IDtoRainRank[x[0]]
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
-                file.write(""" <span class="rank_up">(+"""+str(change)+")</span>")
+                file.write(""" <span class="rank_up">(+{})</span>""".format(change))
             if change < 0:
-                file.write(""" <span class="rank_down">("""+str(change)+")</span>")
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
         else:
             file.write(""" <span class="rank_new">(New)</span>""")
         file.write("""</td>
@@ -720,7 +723,6 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
     pickle.dump(IDToStoredData, file)
     file.close()
     import fcsPerYear
-    fcsPerYear
 
 
 def number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes, count = 2000):
@@ -809,13 +811,13 @@ def number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes, co
       crossorigin="anonymous"></script>
     <script type="text/javascript" src="../../Mottie-tablesorter/js/jquery.tablesorter.js"></script>
     <script>
-    $(function(){
-        $('table').tablesorter({
+    $(function(){{
+        $('table').tablesorter({{
             usNumberFormat : false,
             sortReset      : true,
             sortRestart    : true
-        });
-    });
+        }});
+    }});
     </script>
         <title>
     Number 1s ranking</title>
@@ -827,7 +829,7 @@ def number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes, co
     <p>Ranking based on total number of first places</p>
     <p>If 2 people have the same score, they both get first (normally goes to whoever set the score first)</p>
     <p>Data taken from top 10,000 players.</p>
-    <p>Using """+date+""" data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
       <input id="user_search_button" type="button" value="search">
@@ -837,10 +839,10 @@ def number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes, co
       <label for="country_ranking">Filter by country:</label>
       <select id="country_ranking">
         <option value="all" selected>All country</option>
-    """)
+    """.format(date))
     for x in filteredCountryList:
-        file.write("""    <option value=\"""" + countryCodes[x].replace(" ", "_") + """">""" + countryCodes[x] + """</option>
-    """)
+        file.write("""    <option value="{}">{}</option>
+    """.format(countryCodes[x].replace(" ", "_"), countryCodes[x]))
     file.write("""  </select>
         </div>
         <div class="search_field">
@@ -860,51 +862,51 @@ def number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes, co
             <tbody>
         """)
     for x in top2000Country:
-        file.write("""      <tr class=\"""" + countryCodes[IDToUser[x].country].replace(" ", "_") + """">
-                <td>""" + str(IDToGlobalRank[x]))
+        file.write("""      <tr class="{}">
+                <td>{}""".format(countryCodes[IDToUser[x].country].replace(" ", "_"),IDToGlobalRank[x]))
         if x in lastMonth:
             change = lastMonth[x][0] - IDToGlobalRank[x]
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
-                file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_up">(+{})</span>""".format(change))
             if change < 0:
-                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
         else:
             file.write(""" <span class="rank_new">(New)</span>""")
         file.write("""</td>
                 <td class="user_name">
-                  <a>""" + IDToUser[x].name + """</a>
+                  <a>{}</a>
                 </td>
-                <td>""" + str(IDToGlobal1s.get(x,0)))
+                <td>{}""".format(IDToUser[x].name,IDToGlobal1s.get(x,0)))
         if x in lastMonth:
             change = IDToGlobal1s.get(x,0) - lastMonth[x][1]
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
-                file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_up">(+{})</span>""".format(change))
             if change < 0:
-                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
         file.write("""</td>
-                <td>""" + str(IDToCountry1s[x]))
+                <td>{}""".format(IDToCountry1s[x]))
         if x in lastMonth:
             change = IDToCountry1s[x] - lastMonth[x][3]
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
-                file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_up">(+{})</span>""".format(change))
             if change < 0:
-                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
         file.write("""</td>
-                <td>""" + str(IDToCountryRank[x]))
+                <td>{}""".format(IDToCountryRank[x]))
         if x in lastMonth:
             change = lastMonth[x][2] - IDToCountryRank[x]
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
-                file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_up">(+{})</span>""".format(change))
             if change < 0:
-                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
         else:
             file.write(""" <span class="rank_new">(New)</span>""")
         file.write("""</td>
@@ -1037,13 +1039,13 @@ def hundrethPlay(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000)
           crossorigin="anonymous"></script>
         <script type="text/javascript" src="../../Mottie-tablesorter/js/jquery.tablesorter.js"></script>
         <script>
-        $(function(){
-            $('table').tablesorter({
+        $(function(){{
+            $('table').tablesorter({{
                 usNumberFormat : false,
                 sortReset      : true,
                 sortRestart    : true
-            });
-        });
+            }});
+            }});
         </script>
             <title>
         100th play ranking</title>
@@ -1055,7 +1057,7 @@ def hundrethPlay(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000)
         <p>Ranking based on users 100th best play & 100th best convert</p>
         <p>Doesn't include Loved maps.</p>
         <p>Data taken from top 10,000 players.</p>
-        <p>Using """+date+""" data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+        <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
         <div class="search_field">
           <input id="user_search_text" type="text" placeholder="Search by username...">
           <input id="user_search_button" type="button" value="search">
@@ -1065,10 +1067,10 @@ def hundrethPlay(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000)
           <label for="country_ranking">Filter by country:</label>
           <select id="country_ranking">
             <option value="all" selected>All country</option>
-        """)
+        """.format(date))
     for x in filteredCountryList:
-        file.write("""    <option value=\"""" + countryCodes[x].replace(" ", "_") + """">""" + countryCodes[x] + """</option>
-        """)
+        file.write("""    <option value="{}">{}</option>
+        """.format(countryCodes[x].replace(" ", "_"), countryCodes[x]))
     file.write("""  </select>
             </div>
             <div class="search_field">
@@ -1088,31 +1090,31 @@ def hundrethPlay(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000)
                 <tbody>
             """)
     for x in top2000Total:
-        file.write("""      <tr class=\"""" + countryCodes[IDToUser[x].country].replace(" ", "_") + """">
-                    <td>""" + str(IDToTotalRank[x]))
+        file.write("""      <tr class="{}">
+                    <td>{}""".format(countryCodes[IDToUser[x].country].replace(" ", "_"),IDToTotalRank[x]))
         if x in lastMonth:
             change = lastMonth[x][2] - IDToTotalRank[x]
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
-                file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_up">(+{})</span>""".format(change))
             if change < 0:
-                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
         else:
             file.write(""" <span class="rank_new">(New)</span>""")
         file.write("""</td>
                     <td class="user_name">
-                      <a>""" + IDToUser[x].name + """</a>
+                      <a>{}</a>
                     </td>
-                    <td>{:.2f}""".format(IDToScore.get(x, 0)))
+                    <td>{:.2f}""".format(IDToUser[x].name, IDToScore.get(x, 0)))
         if x in lastMonth:
             change = IDToScore.get(x, 0) - lastMonth[x][1]
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
-                file.write(""" <span class="rank_up">(+""" + "{:.2f}".format(change) + ")</span>")
+                file.write(""" <span class="rank_up">(+{:.2f})</span>""".format(change))
             if change < 0:
-                file.write(""" <span class="rank_down">(""" + "{:.2f}".format(change) + ")</span>")
+                file.write(""" <span class="rank_down">({:.2f})</span>""".format(change))
         file.write("""</td>
                     <td>{:.2f}""".format(IDToConvertScore[x]))
         if x in lastMonth:
@@ -1120,19 +1122,19 @@ def hundrethPlay(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000)
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
-                file.write(""" <span class="rank_up">(+""" + "{:.2f}".format(change) + ")</span>")
+                file.write(""" <span class="rank_up">(+{:.2f})</span>""".format(change))
             if change < 0:
-                file.write(""" <span class="rank_down">(""" + "{:.2f}".format(change) + ")</span>")
+                file.write(""" <span class="rank_down">({:.2f})</span>""".format(change))
         file.write("""</td>
-                    <td>""" + str(IDToConvertRank[x]))
+                    <td>{}""".format(IDToConvertRank[x]))
         if x in lastMonth:
             change = lastMonth[x][0] - IDToConvertRank[x]
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
-                file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_up">(+{})</span>""".format(change))
             if change < 0:
-                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
         else:
             file.write(""" <span class="rank_new">(New)</span>""")
         file.write("""</td>
@@ -1208,12 +1210,12 @@ def hundrethPlay(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000)
 
 def totalPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000):
     mapCount = 0
-    for (_,y) in IDToBeatmap.items():
+    for (_, y) in IDToBeatmap.items():
         if y.mode & 2 == 0:
             if y.status == 1:
                 mapCount += 1
     IDToScore = {}
-    for (x,y) in userIDToPlays.items():
+    for (x, y) in userIDToPlays.items():
         userpassed = set()
         for z in y:
             if z.modCode & 1 == 0:
@@ -1222,8 +1224,8 @@ def totalPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000):
         IDToScore[x] = userpassed.__len__()
     sortedScores = sorted(IDToScore.items(), key=lambda item: item[1], reverse=True)
     filteredCountrySet = set()
-    for x in sortedScores[:count]:
-        filteredCountrySet.add(IDToUser[x[0]].country)
+    for (x, _) in sortedScores[:count]:
+        filteredCountrySet.add(IDToUser[x].country)
     filteredCountryList = sorted(filteredCountrySet, key=lambda item: countryCodes[item])
     IDToStoredData = {}
     lastMonth = []
@@ -1247,13 +1249,13 @@ def totalPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000):
       crossorigin="anonymous"></script>
         <script type="text/javascript" src="../../Mottie-tablesorter/js/jquery.tablesorter.js"></script>
         <script>
-        $(function(){
-            $('table').tablesorter({
+        $(function(){{
+            $('table').tablesorter({{
                 usNumberFormat : false,
                 sortReset      : true,
                 sortRestart    : true
-            });
-        });
+            }});
+        }});
         </script>
         <title>Total Passes</title>
       </head>
@@ -1261,10 +1263,10 @@ def totalPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000):
         <div class="content">
     <p><a href="index.html">Return to main page</a></p>
     <br>
-    <p>Ranking based on total passes (out of """ + str(mapCount) + """ ranked maps)</p>
+    <p>Ranking based on total passes (out of {} ranked maps)</p>
     <p>Data taken from top 10,000 players.</p>
     <p>Doesn't include Loved maps.</p>
-    <p>Using """+date+""" data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
     <p>EZ/HT are allowed. NF is not allowed.</p>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
@@ -1275,10 +1277,10 @@ def totalPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000):
       <label for="country_ranking">Filter by country:</label>
       <select id="country_ranking">
         <option value="all" selected>All country</option>
-    """)
+    """.format(mapCount, date))
     for x in filteredCountryList:
-        file.write("""    <option value=\"""" + countryCodes[x].replace(" ", "_") + """">""" + countryCodes[x] + """</option>
-    """)
+        file.write("""    <option value="{}">{}</option>
+    """.format(countryCodes[x].replace(" ", "_"), countryCodes[x]))
     file.write("""  </select>
 </div>
 <div class="search_field">
@@ -1295,44 +1297,44 @@ def totalPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000):
                    <tbody>
                """)
     rank = 1
-    for x in sortedScores[:count]:
-        file.write("""      <tr class=\"""" + countryCodes[IDToUser[x[0]].country].replace(" ", "_") + """">
-        <td>""" + str(rank))
-        if x[0] in lastMonth:
-            change = lastMonth[x[0]][0] - rank
+    for (x, y) in sortedScores[:count]:
+        file.write("""      <tr class="{}">
+        <td>{}""".format(countryCodes[IDToUser[x].country].replace(" ", "_"),rank))
+        if x in lastMonth:
+            change = lastMonth[x][0] - rank
             if change == 0:
                 file.write(""" <span class="rank_no_change">(→)</span>""")
             if change > 0:
-                file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_up">(+{})</span>""".format(change))
             if change < 0:
-                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
         else:
             file.write(""" <span class="rank_new">(New)</span>""")
         file.write("""</td>
         <td class="user_name">
-          """ + IDToUser[x[0]].name + """
+          {}
         </td>
-        <td>""" + str(x[1]))
-        if x[0] in lastMonth:
-            change = x[1] - lastMonth[x[0]][1]
+        <td>{}""".format(IDToUser[x].name, y))
+        if x in lastMonth:
+            change = y - lastMonth[x][1]
             if change == 0:
                 file.write(""" <span class="rank_no_change">(+0)</span>""")
             if change < 0:
-                file.write(""" <span class="rank_down">(""" + str(change) + ")</span>")
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
             if change > 0:
                 if change < 50:
-                    file.write(""" <span class="pp_50">(+""" + str(change) + ")</span>")
+                    file.write(""" <span class="pp_50">(+{})</span>""".format(change))
                 else:
                     if change < 100:
-                        file.write(""" <span class="pp_100">(+""" + str(change) + ")</span>")
+                        file.write(""" <span class="pp_100">(+{})</span>""".format(change))
                     else:
                         if change < 200:
-                            file.write(""" <span class="rank_new">(+""" + str(change) + ")</span>")
+                            file.write(""" <span class="rank_new">(+{})</span>""".format(change))
                         else:
-                            file.write(""" <span class="rank_up">(+""" + str(change) + ")</span>")
+                            file.write(""" <span class="rank_up">(+{})</span>""".format(change))
         file.write("""</td>
       </tr>""")
-        IDToStoredData[x[0]] = (rank, x[1])
+        IDToStoredData[x] = (rank, y)
         rank += 1
     file.write("""    </tbody>
   </table>
@@ -1421,7 +1423,7 @@ if __name__ == "__main__":
     IDToBeatmapSet = pickle.load(file)
     file.close()
     userIDToConvertPlays = {}
-    totalPasses(userIDToRankedPlays, IDToUser, IDToBeatmap, countryCodes)
+    hundrethPlay(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
     # for x in userIDToRankedPlays:
     #     convertsOnly = []
     #     for y in userIDToRankedPlays[x]:
