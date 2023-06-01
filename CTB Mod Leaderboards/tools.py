@@ -1,8 +1,8 @@
 import math
 import datetime
 
-oneMonthAgo = 1680270124 # 1682857616
-oneYearAgo = 1651359600
+oneMonthAgo = 1682857616
+oneYearAgo = oneMonthAgo - 525600*60
 
 
 class beatmapSet:
