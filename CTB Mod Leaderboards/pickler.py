@@ -8,7 +8,7 @@ import modLeaderboards
 file = open("osu_beatmaps.sql", "r", encoding="utf-8")
 text = file.read()
 file.close()
-capture = re.finditer(r"\((?P<ID>\d+),(?P<SetID>\d+),\d+,'[^']*?(?:\\'[^']*?)*','[0-f]*','(?P<DiffName>[^']*?(?:\\'[^']*?)*)',(?P<Length>\d+(?:\.\d+)?),(?:\d+(?:\.\d+)?,){5}(?P<HP>\d+(?:\.\d+)?),(?:\d+(?:\.\d+)?,){2}(?P<AR>\d+(?:\.\d+)?),(?P<Mode>\d),(?P<Status>\d)", text)
+capture = re.finditer(r"\((?P<ID>\d+),(?P<SetID>\d+),\d+,'[^']*?(?:\\'[^']*?)*','[0-f]*','(?P<DiffName>[^']*?(?:\\'[^']*?)*)',(?P<Length>\d+(?:\.\d+)?),(?:\d+(?:\.\d+)?,){5}(?P<HP>\d+(?:\.\d+)?),(?P<CS>\d+(?:\.\d+)?),\d+(?:\.\d+)?,(?P<AR>\d+(?:\.\d+)?),(?P<Mode>\d),(?P<Status>\d)", text)
 IDToBeatmap = {}
 for x in capture:
     beatmap = tools.beatmap()
@@ -18,6 +18,7 @@ for x in capture:
     beatmap.length = int(x["Length"])
     beatmap.AR = float(x["AR"])
     beatmap.HP = float(x["HP"])
+    beatmap.CS = float(x["CS"])
     beatmap.mode = int(x["Mode"])
     beatmap.status = int(x["Status"])
     beatmap.difficulty = {}

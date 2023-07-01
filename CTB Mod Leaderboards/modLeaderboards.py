@@ -3,7 +3,7 @@ import pickle
 
 oneMonthAgo = tools.oneMonthAgo
 oneYearAgo = tools.oneYearAgo
-date = "1st June 2023"
+dateName = tools.dateName
 
 
 def playFilter(playList, includeMods=0, excludeMods=0):

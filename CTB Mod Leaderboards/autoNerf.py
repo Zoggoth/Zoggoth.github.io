@@ -183,6 +183,8 @@ for (ID,plays) in userIDToRankedPlays.items():
         accuracy = 1-(play.misses + play.drpmiss)/beatmap.accuracyTotal
         newpp = tools.catchPP(SR, play.combo, mcombo, play.misses, AR, modCode, accuracy)
         play.pp = (newpp,newpp)
+        if play.modCode & 66 == 66:
+            play.modCode += 64
     plays.sort(key=lambda item: item.pp[1], reverse=True)
     originalPlays[ID] = plays
     plays = plays[:500]
@@ -282,6 +284,8 @@ for (ID,plays) in userIDToRankedPlays.items():
         IDMod = (play.beatmapID, play.modCode & 66)
         nerfFraction = 1 - timesNerfed.get(IDMod, 0) / 1000
         play.pp = (play.pp[0], play.pp[0] * globalBuff * nerfFraction)
+        if play.modCode & 128 == 128:
+            play.modCode -= 64
     plays.sort(key=lambda item: item.pp[1], reverse=True)
     printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, ID)
     totalpp = 0
@@ -385,6 +389,8 @@ for ((ID, mod), score) in sortedFarm:
     beatmapSet = IDToBeatmapSet[beatmap.beatmapSetID]
     title = beatmapSet.title
     difficultyName = beatmap.difficultyName
+    if mod & 128 == 128:
+        mod -= 64
     modName = tools.modCodeToText(mod)
     nerfs = timesNerfed.get((ID, mod),0)
     SR = beatmap.difficulty[tools.modCodeToDifficultyCode(mod)]

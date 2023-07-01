@@ -1,8 +1,9 @@
 import math
 import datetime
 
-oneMonthAgo = 1682857616 # 1685536283
+oneMonthAgo = 1685536283
 oneYearAgo = oneMonthAgo - 525600*60
+dateName = "1st July 2023"
 
 
 class beatmapSet:
@@ -24,6 +25,7 @@ class beatmap:
     length = 0
     AR = 0  # Beatmaps have aim, speed, strain etc. but only AR is included here for pp calculation purposes
     HP = 0
+    CS = 0
     mode = 0  # 0: standard, 1: taiko, 2: catch, 3: mania
     status = 0  # 1: ranked, 2: approved, 3: qualified, 4: Loved (including TAG4)
     difficulty = {}  # EZ/NM/HR * HT/NM/DT = 9 possible difficulties
