@@ -189,7 +189,9 @@ def printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, user=0, count
 </html>""")
 
 
-def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDToBeatmapSet, includeMods=0, excludeMods=0, count=2000, banSet={}):
+def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDToBeatmapSet, includeMods=0, excludeMods=0, count=2000, banSet=None):
+    if banSet is None:
+        banSet = {}
     IDToPP = []
     allPlays = []
     hasBanList = False
@@ -308,7 +310,7 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
   <label for="country_ranking">Filter by country:</label>
   <select id="country_ranking">
     <option value="all" selected>All country</option>
-""".format(date, name, name))
+""".format(dateName, name, name))
     for x in filteredCountryList:
         file.write("""    <option value="{}">{}</option>
 """.format(countryCodes[x].replace(" ", "_"), countryCodes[x]))
@@ -578,7 +580,7 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
       <label for="country_ranking">Filter by country:</label>
       <select id="country_ranking">
         <option value="all" selected>All country</option>
-    """.format(date))
+    """.format(dateName))
     for x in filteredCountryList:
         file.write("""    <option value="{}">{}</option>
     """.format(countryCodes[x].replace(" ", "_"), countryCodes[x]))
@@ -839,7 +841,7 @@ def number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes, co
       <label for="country_ranking">Filter by country:</label>
       <select id="country_ranking">
         <option value="all" selected>All country</option>
-    """.format(date))
+    """.format(dateName))
     for x in filteredCountryList:
         file.write("""    <option value="{}">{}</option>
     """.format(countryCodes[x].replace(" ", "_"), countryCodes[x]))
@@ -1067,7 +1069,7 @@ def hundrethPlay(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000)
           <label for="country_ranking">Filter by country:</label>
           <select id="country_ranking">
             <option value="all" selected>All country</option>
-        """.format(date))
+        """.format(dateName))
     for x in filteredCountryList:
         file.write("""    <option value="{}">{}</option>
         """.format(countryCodes[x].replace(" ", "_"), countryCodes[x]))
@@ -1277,7 +1279,7 @@ def totalPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000):
       <label for="country_ranking">Filter by country:</label>
       <select id="country_ranking">
         <option value="all" selected>All country</option>
-    """.format(mapCount, date))
+    """.format(mapCount, dateName))
     for x in filteredCountryList:
         file.write("""    <option value="{}">{}</option>
     """.format(countryCodes[x].replace(" ", "_"), countryCodes[x]))
@@ -1422,11 +1424,24 @@ if __name__ == "__main__":
     file = open("IDToBeatmapSet.pkl", "rb")
     IDToBeatmapSet = pickle.load(file)
     file.close()
-    userIDToConvertPlays = {}
-    hundrethPlay(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
+    # modLeaderboard("EZ", includeMods=2, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
+    # modLeaderboard("HD", includeMods=8, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
+    # modLeaderboard("HR", includeMods=16, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
+    # modLeaderboard("DT", includeMods=64, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
+    # modLeaderboard("HT", includeMods=256, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
+    # modLeaderboard("FL", includeMods=1024, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
+    # modLeaderboard("NM", excludeMods=1370, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
+    # modLeaderboard("Loved", userIDToPlays=userIDToLovedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet, banSet={1529757, 2572147, 1257904, 2571858, 1267365, 1165130})
+    # YMDvsTheWorld(4158549, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
+    # specificFCsLeaderboard(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
+    # number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes)
+    # hundrethPlay(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
+    # totalPasses(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
+    # userIDToConvertPlays = {}
     # for x in userIDToRankedPlays:
     #     convertsOnly = []
     #     for y in userIDToRankedPlays[x]:
     #         if IDToBeatmap[y.beatmapID].mode == 0:
     #             convertsOnly.append(y)
     #     userIDToConvertPlays[x] = convertsOnly
+    # modLeaderboard("Convert", userIDToPlays=userIDToConvertPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
