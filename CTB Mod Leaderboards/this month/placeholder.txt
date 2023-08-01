@@ -1,0 +1,4 @@
+This folder contains this month's leaderboards
+When updating, move them to the "last month" folder
+They can then be used to show pp/rank changes in the last month
+Keep a backup, so you don't overwrite it & need to redownload the previous month's data (from experience)
