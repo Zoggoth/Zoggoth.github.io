@@ -159,3 +159,4 @@ for x in userIDToRankedPlays:
             convertsOnly.append(y)
     userIDToConvertPlays[x] = convertsOnly
 modLeaderboards.modLeaderboard("Convert", userIDToPlays=userIDToConvertPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
+import autoNerf
