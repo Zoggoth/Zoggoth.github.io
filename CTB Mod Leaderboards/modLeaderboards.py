@@ -790,7 +790,7 @@ def rankedSpecificPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, cou
     }});
     </script>
         <title>
-    Completionist ranking</title>
+    Ranked Specific Passes</title>
       </head>
       <body>
         <div class="content">
@@ -798,7 +798,8 @@ def rankedSpecificPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, cou
     <br>
     <p>Ranking based on total number of ranked ctb maps passed.</p>
     <p>Data taken from top 10,000 players.</p>
-    <p>Any mods count, but NF AFK plays don't.</p>
+    <p>Any ranked mod is allowed (so no Auto, Relax, ScoreV2 etc.)</p>
+    <p>If you are aiming for 100%, please see <a href="rules.html">here</a>. tl;dr Don't AFK. Just play the way you normally do.</p>
     <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
