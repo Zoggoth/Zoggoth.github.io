@@ -51,7 +51,7 @@ for x in range(round(len(text)/2)):
 file = open("osu_user_stats_fruits.sql", "r")
 text = file.read()
 file.close()
-capture = re.finditer(r"\((?P<ID>\d+),\d+,\d+,\d+,\d+,\d+,\d+,\d+(?:\.\d+)?,\d+,\d+,\d+,\d+,-?\d+,-?\d+,\d+,\d+,\d+,\d+(?:\.\d+)?,\d+,\d+,\d+,\d+,'(?P<Country>\w\w)',(?P<PP>\d+(?:\.\d+)?),(?P<Rank>\d+)", text)
+capture = re.finditer(r"\((?P<ID>\d+),\d+,\d+,\d+,\d+,\d+,\d+,\d+(?:\.\d+)?,\d+,\d+,\d+,-?\d+,-?\d+,-?\d+,-?\d+,\d+,\d+,\d+(?:\.\d+)?,\d+,\d+,\d+,\d+,'(?P<Country>\w\w)',(?P<PP>\d+(?:\.\d+)?),(?P<Rank>\d+)", text)
 IDToUser = {}
 for x in capture:
     user = tools.user()
@@ -160,4 +160,4 @@ for x in userIDToRankedPlays:
             convertsOnly.append(y)
     userIDToConvertPlays[x] = convertsOnly
 modLeaderboards.modLeaderboard("Convert", userIDToPlays=userIDToConvertPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
-import autoNerf
+# import autoNerf
