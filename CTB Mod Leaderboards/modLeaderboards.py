@@ -1741,18 +1741,18 @@ def specificScore(userIDToRankedPlays, userIDToLovedPlays, IDToUser, IDToBeatmap
             if change == 0:
                 file.write(""" <span class="rank_no_change">(+0)</span>""")
             if change < 0:
-                file.write(""" <span class="rank_down">({})</span>""".format(change))
+                file.write(""" <span class="rank_down">({:.2f})</span>""".format(change))
             if change > 0:
-                if change < 50:
-                    file.write(""" <span class="pp_50">(+{})</span>""".format(change))
+                if change < 5:
+                    file.write(""" <span class="pp_50">(+{:.2f})</span>""".format(change))
                 else:
-                    if change < 100:
-                        file.write(""" <span class="pp_100">(+{})</span>""".format(change))
+                    if change < 10:
+                        file.write(""" <span class="pp_100">(+{:.2f})</span>""".format(change))
                     else:
-                        if change < 200:
-                            file.write(""" <span class="rank_new">(+{})</span>""".format(change))
+                        if change < 20:
+                            file.write(""" <span class="rank_new">(+{:.2f})</span>""".format(change))
                         else:
-                            file.write(""" <span class="rank_up">(+{})</span>""".format(change))
+                            file.write(""" <span class="rank_up">(+{:.2f})</span>""".format(change))
         file.write("""</td>
         <td>{:.2f}B""".format(IDToRankedScore[x]))
         if x in lastMonth:
@@ -1760,18 +1760,18 @@ def specificScore(userIDToRankedPlays, userIDToLovedPlays, IDToUser, IDToBeatmap
             if change == 0:
                 file.write(""" <span class="rank_no_change">(+0)</span>""")
             if change < 0:
-                file.write(""" <span class="rank_down">({})</span>""".format(change))
+                file.write(""" <span class="rank_down">({:.2f})</span>""".format(change))
             if change > 0:
-                if change < 50:
-                    file.write(""" <span class="pp_50">(+{})</span>""".format(change))
+                if change < 5:
+                    file.write(""" <span class="pp_50">(+{:.2f})</span>""".format(change))
                 else:
-                    if change < 100:
-                        file.write(""" <span class="pp_100">(+{})</span>""".format(change))
+                    if change < 10:
+                        file.write(""" <span class="pp_100">(+{:.2f})</span>""".format(change))
                     else:
-                        if change < 200:
-                            file.write(""" <span class="rank_new">(+{})</span>""".format(change))
+                        if change < 20:
+                            file.write(""" <span class="rank_new">(+{:.2f})</span>""".format(change))
                         else:
-                            file.write(""" <span class="rank_up">(+{})</span>""".format(change))
+                            file.write(""" <span class="rank_up">(+{:.2f})</span>""".format(change))
         file.write("""</td>
                     <td>{}""".format(IDToRankedRank[x]))
         if x in lastMonth:
