@@ -152,6 +152,7 @@ modLeaderboards.rankedSpecificPasses(userIDToPlays=userIDToRankedPlays, IDToUser
 modLeaderboards.number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes)
 modLeaderboards.hundrethPlay(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
 modLeaderboards.totalPasses(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
+modLeaderboards.specificScore(userIDToRankedPlays=userIDToRankedPlays,userIDToLovedPlays=userIDToLovedPlays,IDToUser=IDToUser,IDToBeatmap=IDToBeatmap,countryCodes=countryCodes)
 userIDToConvertPlays = {}
 for x in userIDToRankedPlays:
     convertsOnly = []

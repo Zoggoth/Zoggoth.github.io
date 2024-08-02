@@ -35,10 +35,14 @@ for x in userIDToRankedPlays:
         IDtoFCs[y] += 1
     if x == player:
         playerSet = FCSet
+print("currentDate:{}".format(currentDate))
 perYearList = []
 for x in IDtoFCs:
     FCsPerYear = 525600*60*float(IDtoFCs[x])/(currentDate-IDToBeatmapSet[IDToBeatmap[x].beatmapSetID].date)
-    FCsPerRootYear = float(IDtoFCs[x])/math.sqrt((currentDate-IDToBeatmapSet[IDToBeatmap[x].beatmapSetID].date)/525600/60)
+    try:
+        FCsPerRootYear = float(IDtoFCs[x])/math.sqrt((currentDate-IDToBeatmapSet[IDToBeatmap[x].beatmapSetID].date)/525600/60)
+    except:
+        FCsPerRootYear = 0
     perYearList.append((x, FCsPerYear, FCsPerRootYear, IDtoFCs[x]))
 perYearList.sort(key=lambda item: item[2])
 file = open("html/rarestFCs.html", "w", encoding="utf-8")

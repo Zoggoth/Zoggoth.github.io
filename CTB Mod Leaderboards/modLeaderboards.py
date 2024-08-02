@@ -1606,6 +1606,253 @@ def totalPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000):
     pickle.dump(IDToStoredData, file)
     file.close()
 
+def specificScore(userIDToRankedPlays, userIDToLovedPlays, IDToUser, IDToBeatmap, countryCodes, count=2000):
+    IDToRankedScore = {}
+    for (x,y) in userIDToRankedPlays.items():
+        beatmapIDToScore = {}
+        for z in y:
+            beatmapID = z.beatmapID
+            if IDToBeatmap[beatmapID].mode == 2:
+                score = z.score
+                oldScore = beatmapIDToScore.get(beatmapID,0)
+                beatmapIDToScore[beatmapID] = max(score, oldScore)
+        scoreSum = 0
+        for (_,z) in beatmapIDToScore.items():
+            scoreSum += z
+        IDToRankedScore[x] = scoreSum
+    IDToTotalScore = IDToRankedScore.copy()
+    for (x,y) in userIDToLovedPlays.items():
+        beatmapIDToScore = {}
+        for z in y:
+            beatmapID = z.beatmapID
+            if IDToBeatmap[beatmapID].mode == 2:
+                score = z.score
+                oldScore = beatmapIDToScore.get(beatmapID,0)
+                beatmapIDToScore[beatmapID] = max(score, oldScore)
+        scoreSum = 0
+        for (_,z) in beatmapIDToScore.items():
+            scoreSum += z
+        IDToTotalScore[x] += scoreSum
+    for (x,y) in IDToRankedScore.items():
+        IDToRankedScore[x] = round(y/1000000000, 2)
+    for (x,y) in IDToTotalScore.items():
+        IDToTotalScore[x] = round(y/1000000000, 2)
+    sortedScores = sorted(IDToRankedScore.items(), key=lambda item: item[1], reverse=True)
+    IDToRankedRank = {}
+    rank = 1
+    for (x,y) in sortedScores:
+        IDToRankedRank[x] = rank
+        rank += 1
+    sortedScores = sorted(IDToTotalScore.items(), key=lambda item: item[1], reverse=True)
+    filteredCountrySet = set()
+    for (x, _) in sortedScores[:count]:
+        filteredCountrySet.add(IDToUser[x].country)
+    filteredCountryList = sorted(filteredCountrySet, key=lambda item: countryCodes[item])
+    IDToStoredData = {}
+    lastMonth = []
+    try:
+        file = open("last month/previousSpecificScore.pkl", "rb")
+        lastMonth = pickle.load(file)
+        file.close()
+    except:
+        lastMonth = []
+    file = open("html/specificScore.html", "w", encoding="utf-8")
+    file.write("""<!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
+    <link rel="stylesheet" href="../../style.css">
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"></script>
+        <script type="text/javascript" src="../../Mottie-tablesorter/js/jquery.tablesorter.js"></script>
+        <script>
+        $(function(){{
+            $('table').tablesorter({{
+                usNumberFormat : false,
+                sortReset      : true,
+                sortRestart    : true
+            }});
+        }});
+        </script>
+        <title>Catch-only Score</title>
+      </head>
+      <body>
+        <div class="content">
+    <p><a href="index.html">Return to main page</a></p>
+    <br>
+    <p>Total of players highest scoring play on each map</p>
+    <p>Data taken from top 10,000 players.</p>
+    <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    <div class="search_field">
+      <input id="user_search_text" type="text" placeholder="Search by username...">
+      <input id="user_search_button" type="button" value="search">
+      <span>(Case-insensitive)</span>
+    </div>
+    <div class="search_field">
+      <label for="country_ranking">Filter by country:</label>
+      <select id="country_ranking">
+        <option value="all" selected>All country</option>
+    """.format(dateName))
+    for x in filteredCountryList:
+        file.write("""    <option value="{}">{}</option>
+    """.format(countryCodes[x].replace(" ", "_"), countryCodes[x]))
+    file.write("""  </select>
+</div>
+<div class="search_field">
+  <input id="reset" type="button" value="Clear search result">
+</div>
+<div id="ranking-wrapper">
+  <table table class="tablesorter">
+    <thead>
+      <tr>
+        <th data-lockedorder="asc" class="text-left">#</th>
+        <th data-sorter="false" id="user_name_head">Name</th>
+        <th data-lockedorder="desc">Total</th>
+        <th data-lockedorder="desc">Ranked</th>
+        <th data-lockedorder="asc" class="text-left">#</th>      </tr>
+                   </thead>
+                   <tbody>
+               """)
+    rank = 1
+    for (x, y) in sortedScores[:count]:
+        file.write("""      <tr class="{}">
+        <td>{}""".format(countryCodes[IDToUser[x].country].replace(" ", "_"),rank))
+        if x in lastMonth:
+            change = lastMonth[x][0] - rank
+            if change == 0:
+                file.write(""" <span class="rank_no_change">(→)</span>""")
+            if change > 0:
+                file.write(""" <span class="rank_up">(+{})</span>""".format(change))
+            if change < 0:
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
+        else:
+            file.write(""" <span class="rank_new">(New)</span>""")
+        file.write("""</td>
+        <td class="user_name">
+          {}
+        </td>
+        <td>{:.2f}B""".format(IDToUser[x].name, y))
+        if x in lastMonth:
+            change = y - lastMonth[x][1]
+            if change == 0:
+                file.write(""" <span class="rank_no_change">(+0)</span>""")
+            if change < 0:
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
+            if change > 0:
+                if change < 50:
+                    file.write(""" <span class="pp_50">(+{})</span>""".format(change))
+                else:
+                    if change < 100:
+                        file.write(""" <span class="pp_100">(+{})</span>""".format(change))
+                    else:
+                        if change < 200:
+                            file.write(""" <span class="rank_new">(+{})</span>""".format(change))
+                        else:
+                            file.write(""" <span class="rank_up">(+{})</span>""".format(change))
+        file.write("""</td>
+        <td>{:.2f}B""".format(IDToRankedScore[x]))
+        if x in lastMonth:
+            change = IDToRankedScore[x] - lastMonth[x][3]
+            if change == 0:
+                file.write(""" <span class="rank_no_change">(+0)</span>""")
+            if change < 0:
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
+            if change > 0:
+                if change < 50:
+                    file.write(""" <span class="pp_50">(+{})</span>""".format(change))
+                else:
+                    if change < 100:
+                        file.write(""" <span class="pp_100">(+{})</span>""".format(change))
+                    else:
+                        if change < 200:
+                            file.write(""" <span class="rank_new">(+{})</span>""".format(change))
+                        else:
+                            file.write(""" <span class="rank_up">(+{})</span>""".format(change))
+        file.write("""</td>
+                    <td>{}""".format(IDToRankedRank[x]))
+        if x in lastMonth:
+            change = lastMonth[x][2] - IDToRankedRank[x]
+            if change == 0:
+                file.write(""" <span class="rank_no_change">(→)</span>""")
+            if change > 0:
+                file.write(""" <span class="rank_up">(+{})</span>""".format(change))
+            if change < 0:
+                file.write(""" <span class="rank_down">({})</span>""".format(change))
+        file.write("""</td>
+      </tr>""")
+        IDToStoredData[x] = (rank, y, IDToRankedRank[x], IDToRankedScore[x])
+        rank += 1
+    file.write("""    </tbody>
+  </table>
+</div>
+  </div>
+  </body>
+<script>
+  "use strict";
+  window.addEventListener('pageshow', () => {
+    $("#country_ranking").val("all");
+    $("#user_search_text").val("");
+  });
+  $(() => {
+    const escapeRegExp = (string) => string.replace(/[.*+?^${}()|[\]\\\\]/g, '\\\\$&');
+    const resetTable = () => $("tr").removeClass('hide');
+    let isNameFiltered = false;
+    let isCountryFiltered = false;
+    $("#user_search_button").on("click", () => {
+      if(isNameFiltered) {
+        resetTable();
+      }
+      const search_text = $("#user_search_text").val();
+      $(".user_name a").each((_, e) => {
+        const user_elem = $(e);
+        const user_parent = user_elem.closest("tr");
+        const val = user_elem.text().toUpperCase();
+        if (val.match(escapeRegExp(search_text.toUpperCase()))) {
+          user_parent.removeClass('hide');
+        } else {
+          user_parent.addClass('hide');
+        }
+      });
+      isNameFiltered = true;
+    });
+
+    $("#reset").on("click", () => {
+      resetTable();
+      $("#country_ranking").val("all");
+      $("#user_search_text").val("");
+    });
+
+    $("#country_ranking").on("change", () => {
+      if (isCountryFiltered) {
+        resetTable();
+      }
+      const selected_country = $("#country_ranking").val();
+      if (selected_country === "all") {
+        resetTable();
+      } else {
+        $("tbody tr").each((_, e) => {
+          const user_row = $(e);
+          if (user_row.attr("class") === selected_country) {
+            user_row.removeClass('hide');
+          } else {
+            user_row.addClass('hide');
+          }
+        });
+        isCountryFiltered = true;
+      }
+    });
+  });
+</script>
+</html>""")
+    file.close()
+    file = open("this month/previousSpecificScore.pkl", "wb")
+    pickle.dump(IDToStoredData, file)
+    file.close()
+
 if __name__ == "__main__":
     file = open("userIDToLovedPlays.pkl", "rb")
     userIDToLovedPlays = pickle.load(file)
@@ -1625,6 +1872,7 @@ if __name__ == "__main__":
     file = open("IDToBeatmapSet.pkl", "rb")
     IDToBeatmapSet = pickle.load(file)
     file.close()
+    specificScore(userIDToRankedPlays=userIDToRankedPlays,userIDToLovedPlays=userIDToLovedPlays,IDToUser=IDToUser,IDToBeatmap=IDToBeatmap,countryCodes=countryCodes)
     # modLeaderboard("EZ", includeMods=2, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
     # modLeaderboard("HD", includeMods=8, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
     # modLeaderboard("HR", includeMods=16, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
@@ -1635,7 +1883,7 @@ if __name__ == "__main__":
     # modLeaderboard("Loved", userIDToPlays=userIDToLovedPlays, IDToUser=IDToUser, countryCodes=countryCodes, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet, banSet={1529757, 2572147, 1257904, 2571858, 1267365, 1165130})
     # YMDvsTheWorld(4158549, userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, IDToBeatmapSet=IDToBeatmapSet)
     # specificFCsLeaderboard(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
-    rankedSpecificPasses(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
+    # rankedSpecificPasses(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
     # number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes)
     # hundrethPlay(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
     # totalPasses(userIDToPlays=userIDToRankedPlays, IDToUser=IDToUser, IDToBeatmap=IDToBeatmap, countryCodes=countryCodes)
