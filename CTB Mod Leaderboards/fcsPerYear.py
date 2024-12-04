@@ -117,7 +117,11 @@ file.close()
 file = open("IDToUser.pkl", "rb")
 IDToUser = pickle.load(file)
 file.close()
-playerName = IDToUser[player].name
+try:
+    playerName = IDToUser[player].name
+except KeyError:
+    player = sorted(IDToUser.keys())[0]
+    playerName = IDToUser[player].name
 playerFCs = open("playerFCs.html", "w", encoding="utf-8")
 playerNonFCs = open("playerNonFCs.html", "w", encoding="utf-8")
 playerFCs.write("""<!DOCTYPE html>
