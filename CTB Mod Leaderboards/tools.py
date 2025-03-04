@@ -4,9 +4,9 @@ import datetime
 # All the stuff that needs to be updated once a month
 # Also, remember to put the "this month" data into the "last month" folder
 # It's a giant hassle if you forget to do this
-oneMonthAgo = 1729650437 # 1732993150
+oneMonthAgo = 1738351187 # 1740770970
 oneYearAgo = oneMonthAgo - 525600*60
-dateName = "1st December 2024"
+dateName = "1st March 2025"
 
 
 class beatmapSet:
@@ -162,7 +162,10 @@ def catchPP(SR, combo, mCombo, misses, AR, modCode, accuracy):
     lengthbonus = (0.95 + 0.3 * min(1.0, mCombo/2500.0) + (0 if mCombo <= 2500 else math.log10(mCombo/2500.0) * 0.475))
     pp *= lengthbonus
     pp *= 0.97**misses
-    pp *= (combo/mCombo)**.8
+    try:
+        pp *= (combo/mCombo)**.8
+    except ZeroDivisionError:
+        pass
     arbonus = 1
     if AR > 9:
         arbonus += 0.1 * (AR - 9.0)
