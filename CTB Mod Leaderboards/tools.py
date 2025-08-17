@@ -4,9 +4,9 @@ import datetime
 # All the stuff that needs to be updated once a month
 # Also, remember to put the "this month" data into the "last month" folder
 # It's a giant hassle if you forget to do this
-oneMonthAgo = 1746036738 # 1748713975
+oneMonthAgo = 1751312100 # 1751312100
 oneYearAgo = oneMonthAgo - 525600*60
-dateName = "1st June 2025"
+dateName = "1st July 2025"
 
 
 class beatmapSet:

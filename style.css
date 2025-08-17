@@ -88,18 +88,32 @@ input[type="button"] {
 
 /* STYLE REMAKE AUG 2025 */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
+@font-face {
+  font-family: 'Torus';
+  src: url('/res/Torus-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
 
 html {
   scroll-behavior: smooth;
-  font-family: Torus, Inter, "Helvetica Neue", Tahoma, Arial, "Hiragino Kaku Gothic ProN", Meiryo, "Microsoft YaHei", "Apple SD Gothic Neo", sans-serif;
+  font-family: 'Torus', Inter, "Helvetica Neue", Tahoma, Arial, "Hiragino Kaku Gothic ProN", Meiryo, "Microsoft YaHei", "Apple SD Gothic Neo", sans-serif;
   line-height: 1.6;
 }
 
 body {
   background-color: #24222a;
-
+  padding: 0;
+  margin: 0;
   color: white;
+
+  display: flex;
+  flex-direction: column;
 }
 
 a{
@@ -199,11 +213,111 @@ a:visited {
   transform: scale(1.1);
 }
 
-.index-footer {
+.index-footer, .credits-footer {
   text-align: center;
   padding: 1rem;
-  background-color: #1e1e1e;
   border-top: 1px solid #393939;
 
-  
+  background: #1e1e1e;
+}
+
+.index-title{
+  text-align: center;
+  padding: 1rem;
+  border-bottom: 1px solid #393939;
+
+  background: #1e1e1e;
+}
+
+.github-logo {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+
+
+  width: 64px;
+  height: 64px;
+  background: url('../../res/github-logo.png') no-repeat center center;
+  background-size: contain;
+}
+
+/* CREDITS PAGE STYLES */
+
+.credits-title {
+  width: 100%;
+
+  text-align: center;
+  padding: 1rem;
+  border-bottom: 1px solid #393939;
+
+  background: #1e1e1e;
+}
+
+.return{
+  text-align: center;
+  margin: 1rem 0;
+
+  border: 1px solid #393939;
+  border-radius: 5px;
+  width: fit-content;
+  padding: .5rem;
+}
+
+.return a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.credits-content {
+  padding: 1rem;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
+
+  flex: 1;
+}
+
+.credits-content p {
+  margin: 0.5rem 0;
+}
+
+.credits, .license {
+  display: flex;
+  flex-direction: column;
+
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  margin-bottom: 2rem;
+}
+
+.credits a, .license a {
+  color: deepskyblue;
+  text-decoration: none;
+}
+
+.credits a:hover, .license a:hover {
+  text-decoration: underline;
+}
+
+.credits a:visited, .license a:visited {
+  color: deepskyblue;
+}
+
+.signature {
+  text-align: center;
+  margin-top: 2rem;
+  font-style: italic;
+}
+
+/* PAGES STYLE */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
 }
