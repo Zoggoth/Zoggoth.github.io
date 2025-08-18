@@ -350,7 +350,9 @@ file.write("""<!DOCTYPE html>
   </head>
   <body>
     <div class="content">
-<p><a href="index.html">Return to main page</a></p>
+<div class="return">
+				<a href="index.html"><img src="../../res/back-arrow.svg" alt="Return to main" width="16" height="16"><span> Return to main page</span></a>
+			</div>
 <br>
   <p>All farm maps are <a href="AutoNerf/farm.html" target="_blank">nerfed</a> until there are no farm maps</p>
   <p>Then all maps are given a {:.2f}% buff to keep average pp the same</p>

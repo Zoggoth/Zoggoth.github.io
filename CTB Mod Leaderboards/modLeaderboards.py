@@ -1,3 +1,4 @@
+from pprint import pp
 import tools
 import pickle
 
@@ -112,31 +113,44 @@ def printPlays(plays, IDToBeatmap, IDToBeatmapSet, IDToUser, name, user=0, count
         filename += "{}.html".format(user)
     file = open(filename, "w")
     username = "Everyone" if multiuser else IDToUser[user].name
-    file.write("""<!DOCTYPE html>
+
+    pp_val = pp
+    try:
+        pp_val = float(pp_val)
+    except (TypeError, ValueError):
+        if isinstance(pp_val, str):
+            normalized = pp_val.replace(',', '')
+            pp_val = float(normalized) if normalized.replace('.', '', 1).isdigit() else 0.0
+        else:
+            pp_val = 0.0
+
+    file.write(f"""<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
-<link rel="stylesheet" href="../../../style.css">
-    <title>{}'s {} plays</title>
+    <link rel="stylesheet" href="../../../style.css">
+    <title>{username}'s {name} plays</title>
   </head>
   <body>
     <div class="content">
-<p><a href="../{}.html">Return to leaderboard</a></p>
-<br>
-<p><b>{} ({:.2f} pp)</b></p>
-<div class="bp-wrapper">
-  <table class="bp">
-    <thead>
-      <tr>
-        <th class="text-left">#</th>
-        <th>Map name</th>
-        <th>Mods</th>
-        <th>Miss</th>
-        <th>Combo</th>
-        <th>PP</th>
-""".format(username, name, ("index" if name == "Total" else name), username, pp))
+      <div class="return">
+        <a href="index.html"><img src="../../res/back-arrow.svg" alt="Return to main" width="16" height="16"><span> Return to main page</span></a>
+      </div>
+      <br>
+      <p><b>{username} ({pp_val:.2f} pp)</b></p>
+      <div class="bp-wrapper">
+        <table class="bp">
+          <thead>
+            <tr>
+              <th class="text-left">#</th>
+              <th>Map name</th>
+              <th>Mods</th>
+              <th>Miss</th>
+              <th>Combo</th>
+              <th>PP</th>
+""")
     if multiuser:
         file.write("""<th>Player</th>
 """)
@@ -283,7 +297,9 @@ def modLeaderboard(name, userIDToPlays, IDToUser, countryCodes, IDToBeatmap, IDT
   </head>
   <body>
     <div class="content">
-<p><a href="index.html">Return to main page</a></p>
+      <div class="return">
+				<a href="index.html"><img src="../../res/back-arrow.svg" alt="Return to main" width="16" height="16"><span> Return to main page</span></a>
+			</div>
 <br>
 <p>Osu!catch pp from {} plays.</p>
 <p>Data taken from top 10,000 players.</p>
@@ -558,19 +574,23 @@ def specificFCsLeaderboard(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, c
       </head>
       <body>
         <div class="content">
-    <p><a href="index.html">Return to main page</a></p>
+      <div class="return">
+				<a href="index.html"><img src="../../res/back-arrow.svg" alt="Return to main" width="16" height="16"><span> Return to main page</span></a>
+			</div>
     <br>
-    <p>Ranking based on total number of ranked ctb maps each user has FCd.</p>
-    <p>Data taken from top 10,000 players.</p>
-    <p>HT/EZ FCs do not count (even if EZ makes the map harder).</p>
-    <p>Overwritten plays (a NM FC & a HR choke) still count as FCing, even if the FC comes after the choke.</p>
-    <p>Lists of missing FCs are not currently provided, as most users have several thousand.</p>
-    <p>In addition to total FCs, there is also a leaderboard that only tracks "difficult" plays. Click the top of the table to sort</p>
-    <p>This allows users to compete without playing 4000 Cups/Salads/Platters.</p>
-    <p>I arbitrarily chose 3.5* as the cutoff.</p>
-    <p> It's approximately the border between Platter & Rain, and includes <a href="http://osu.ppy.sh/b/283299">several</a> <a href="http://osu.ppy.sh/b/369758">maps</a> <a href="https://osu.ppy.sh/b/2905286">that I</a> <a href="http://osu.ppy.sh/b/177970">found</a> <a href="https://osu.ppy.sh/b/2385749">difficult</a>.</p>
-    <p><a href="rarestFCs.html">Rarest FCs</a></p>
-    <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    <div class="info">
+      <p>Ranking based on total number of ranked ctb maps each user has FCd.</p>
+      <p>Data taken from top 10,000 players.</p>
+      <p>HT/EZ FCs do not count (even if EZ makes the map harder).</p>
+      <p>Overwritten plays (a NM FC & a HR choke) still count as FCing, even if the FC comes after the choke.</p>
+      <p>Lists of missing FCs are not currently provided, as most users have several thousand.</p>
+      <p>In addition to total FCs, there is also a leaderboard that only tracks "difficult" plays. Click the top of the table to sort</p>
+      <p>This allows users to compete without playing 4000 Cups/Salads/Platters.</p>
+      <p>I arbitrarily chose 3.5* as the cutoff.</p>
+      <p> It's approximately the border between Platter & Rain, and includes <a href="http://osu.ppy.sh/b/283299">several</a> <a href="http://osu.ppy.sh/b/369758">maps</a> <a href="https://osu.ppy.sh/b/2905286">that I</a> <a href="http://osu.ppy.sh/b/177970">found</a> <a href="https://osu.ppy.sh/b/2385749">difficult</a>.</p>
+      <p><a href="rarestFCs.html">Rarest FCs</a></p>
+      <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    </div>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
       <input id="user_search_button" type="button" value="search">
@@ -794,13 +814,17 @@ def rankedSpecificPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, cou
       </head>
       <body>
         <div class="content">
-    <p><a href="index.html">Return to main page</a></p>
+      <div class="return">
+				<a href="index.html"><img src="../../res/back-arrow.svg" alt="Return to main" width="16" height="16"><span> Return to main page</span></a>
+			</div>
     <br>
-    <p>Ranking based on total number of ranked ctb maps passed.</p>
-    <p>Data taken from top 10,000 players.</p>
-    <p>Any ranked mod is allowed (so no Auto, Relax, ScoreV2 etc.)</p>
-    <p>If you are aiming for 100%, please see <a href="rules.html">here</a>. tl;dr Don't AFK. Just play the way you normally do.</p>
-    <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    <div class="info">
+      <p>Ranking based on total number of ranked ctb maps passed.</p>
+      <p>Data taken from top 10,000 players.</p>
+      <p>Any ranked mod is allowed (so no Auto, Relax, ScoreV2 etc.)</p>
+      <p>If you are aiming for 100%, please see <a href="rules.html">here</a>. tl;dr Don't AFK. Just play the way you normally do.</p>
+      <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    </div>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
       <input id="user_search_button" type="button" value="search">
@@ -1027,12 +1051,16 @@ def number1s(userIDToRankedPlays, userIDToLovedPlays, IDToUser, countryCodes, co
       </head>
       <body>
         <div class="content">
-    <p><a href="index.html">Return to main page</a></p>
+      <div class="return">
+				<a href="index.html"><img src="../../res/back-arrow.svg" alt="Return to main" width="16" height="16"><span> Return to main page</span></a>
+			</div>
     <br>
-    <p>Ranking based on total number of first places</p>
-    <p>If 2 people have the same score, they both get first (normally goes to whoever set the score first)</p>
-    <p>Data taken from top 10,000 players.</p>
-    <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    <div class="info">
+      <p>Ranking based on total number of first places</p>
+      <p>If 2 people have the same score, they both get first (normally goes to whoever set the score first)</p>
+      <p>Data taken from top 10,000 players.</p>
+      <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    </div>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
       <input id="user_search_button" type="button" value="search">
@@ -1255,12 +1283,16 @@ def hundrethPlay(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000)
           </head>
           <body>
             <div class="content">
-        <p><a href="index.html">Return to main page</a></p>
+        <div class="return">
+				  <a href="index.html"><img src="../../res/back-arrow.svg" alt="Return to main" width="16" height="16"><span> Return to main page</span></a>
+			  </div>
         <br>
-        <p>Ranking based on users 100th best play & 100th best convert</p>
-        <p>Doesn't include Loved maps.</p>
-        <p>Data taken from top 10,000 players.</p>
-        <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+        <div class="info">
+          <p>Ranking based on users 100th best play & 100th best convert</p>
+          <p>Doesn't include Loved maps.</p>
+          <p>Data taken from top 10,000 players.</p>
+          <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+        </div>
         <div class="search_field">
           <input id="user_search_text" type="text" placeholder="Search by username...">
           <input id="user_search_button" type="button" value="search">
@@ -1464,13 +1496,17 @@ def totalPasses(userIDToPlays, IDToUser, IDToBeatmap, countryCodes, count=2000):
       </head>
       <body>
         <div class="content">
-    <p><a href="index.html">Return to main page</a></p>
+      <div class="return">
+				<a href="index.html"><img src="../../res/back-arrow.svg" alt="Return to main" width="16" height="16"><span> Return to main page</span></a>
+			</div>
     <br>
-    <p>Ranking based on total passes (out of {} ranked maps)</p>
-    <p>Data taken from top 10,000 players.</p>
-    <p>Doesn't include Loved maps.</p>
-    <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
-    <p>EZ/HT are allowed. NF is not allowed.</p>
+    <div class="info">
+      <p>Ranking based on total passes (out of {} ranked maps)</p>
+      <p>Data taken from top 10,000 players.</p>
+      <p>Doesn't include Loved maps.</p>
+      <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+      <p>EZ/HT are allowed. NF is not allowed.</p>
+    </div>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
       <input id="user_search_button" type="button" value="search">
@@ -1682,11 +1718,15 @@ def specificScore(userIDToRankedPlays, userIDToLovedPlays, IDToUser, IDToBeatmap
       </head>
       <body>
         <div class="content">
-    <p><a href="index.html">Return to main page</a></p>
+      <div class="return">
+				<a href="index.html"><img src="../../res/back-arrow.svg" alt="Return to main" width="16" height="16"><span> Return to main page</span></a>
+			</div>
     <br>
-    <p>Total of players highest scoring play on each map</p>
-    <p>Data taken from top 10,000 players.</p>
-    <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    <div class="info">
+      <p>Total of players highest scoring play on each map</p>
+      <p>Data taken from top 10,000 players.</p>
+      <p>Using {} data. Data is released once a month at <a href="https://data.ppy.sh/">data.ppy.sh</a>, used with permission</p>
+    </div>
     <div class="search_field">
       <input id="user_search_text" type="text" placeholder="Search by username...">
       <input id="user_search_button" type="button" value="search">
