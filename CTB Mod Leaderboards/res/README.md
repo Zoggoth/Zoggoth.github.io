@@ -1,0 +1,1 @@
+This folder is to fix the subfolders in html/** that search for ../../res
